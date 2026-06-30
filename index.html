@@ -34,11 +34,6 @@
             letter-spacing: 2px;
         }
 
-        .username {
-            font-size: 1.2em;
-            color: #888;
-        }
-
         .stats {
             display: flex;
             gap: 30px;
@@ -216,25 +211,12 @@
             color: #888;
             font-size: 1.1em;
         }
-
-        .goty-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #f43f5e;
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.75em;
-            font-weight: bold;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Collection de Jeux Indés</h1>
-            <p class="username" id="username">Chargement...</p>
+            <h1 id="title">Collection de astoumix</h1>
             <div class="stats">
                 <div class="stat-item">
                     <div class="stat-label">Jeux Classiques</div>
@@ -274,6 +256,11 @@
         let currentFilter = "all";
         let currentSort = "name";
 
+        function getRarityClass(rarity) {
+            const map = {"Commun":"commun","Peu commun":"peucommun","Rare":"rare","Epique":"epique","Légendaire":"legendaire"};
+            return map[rarity] || "commun";
+        }
+
         function getUsername() {
             const parts = window.location.pathname.split('/').filter(p => p);
             return parts[parts.length - 1] || "astoumix";
@@ -281,12 +268,15 @@
 
         function loadCollection() {
             const username = getUsername();
-            document.getElementById("username").textContent = `Collection de ${username}`;
-            const testGames = [4, 7, 10, 35, 56, 97, 111, 1, 25, 52, 61, 82, 99, 128, 145, 147, 155];
+            document.getElementById("title").textContent = `Collection de ${username}`;
+            
+            const testGames = [3, 5, 12, 14, 18, 21, 27, 28, 30, 32, 33, 39, 41, 43, 46, 49, 53, 59, 64, 65, 67, 68, 69, 74, 76, 78, 79, 83, 84, 90, 94, 95, 98, 104, 105, 106, 108, 112, 114, 115, 117, 119, 120, 121, 123, 124, 129, 130, 131, 133, 134, 135, 136, 143, 149, 151, 152, 154, 156, 157, 158, 11, 13, 15, 16, 17, 23, 24, 26, 36, 38, 50, 51, 57, 60, 63, 73, 80, 81, 85, 86, 91, 92, 93, 96, 101, 102, 110, 116, 118, 122, 126, 127, 132, 137, 141, 142, 144, 146, 148, 150, 159, 2, 6, 8, 9, 22, 31, 34, 40, 42, 45, 47, 48, 55, 62, 66, 70, 71, 72, 75, 77, 87, 88, 89, 100, 103, 107, 109, 113, 125, 139, 140, 19, 20, 25, 44, 52, 54, 58, 61, 82, 99, 128, 138, 145, 147, 153, 155, 1, 4, 7, 10, 35, 56, 97, 111];
+            
             testGames.forEach(id => {
                 collection[id] = 1;
-                collection[-id] = Math.random() > 0.7 ? 1 : 0;
+                collection[-id] = Math.random() > 0.8 ? 1 : 0;
             });
+
             render();
         }
 
@@ -314,7 +304,11 @@
 
             gallery.innerHTML = games.length === 0 
                 ? '<div class="empty">Aucun jeu dans cette collection pour l\'instant</div>'
-                : games.map(g => `<div class="card ${g.isGoty ? "goty" : g.rarity.toLowerCase()}"><div class="card-image">${g.isGoty ? '<div class="goty-badge">⭐ GOTY</div>' : ''}<img src="GamesImg/mockup${g.isGoty ? "/GOTY" : ""}/${g.id}.png" alt="${g.name}" onerror="this.style.display='none'"></div><div class="card-info"><div class="card-name">${g.name}</div><div class="card-year">${g.year}</div><div class="card-rarity">${g.isGoty ? "GOTY" : g.rarity}</div></div></div>`).join('');
+                : games.map(g => {
+                    const rarityClass = getRarityClass(g.rarity);
+                    const cardClass = g.isGoty ? "goty" : rarityClass;
+                    return `<div class="card ${cardClass}"><div class="card-image"><img src="GamesImg/mockup${g.isGoty ? "/GOTY" : ""}/${g.id}.png" alt="${g.name}" onerror="this.style.display='none'"></div><div class="card-info"><div class="card-name">${g.name}</div><div class="card-year">${g.year}</div><div class="card-rarity">${g.isGoty ? "GOTY" : g.rarity}</div></div></div>`;
+                }).join('');
         }
 
         document.getElementById("filter-all").addEventListener("click", function() {
