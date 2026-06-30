@@ -262,8 +262,12 @@
         }
 
         function getUsername() {
-            const parts = window.location.pathname.split('/').filter(p => p);
-            return parts[parts.length - 1] || "astoumix";
+            // Récupère le dernier segment de l'URL
+            const pathParts = window.location.pathname.split('/').filter(p => p);
+            const username = pathParts[pathParts.length - 1];
+            
+            // Si pas de pseudo, utilise celui en dur
+            return username || 'astoumix';
         }
 
         async function loadCollection() {
