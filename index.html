@@ -107,6 +107,27 @@
             border-color: #a855f7;
         }
 
+        .filter-group button {
+            padding: 10px 20px;
+            background: #2a2a2a;
+            color: #fff;
+            border: 2px solid #444;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: all 0.2s ease;
+        }
+
+        .filter-group button:hover {
+            border-color: #a855f7;
+            background: #333;
+        }
+
+        .filter-group button.active {
+            background: #a855f7;
+            border-color: #a855f7;
+        }
+
         .gallery {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -212,55 +233,85 @@
             font-size: 1.1em;
         }
 
-        /* PAGE D'ACCUEIL */
+        /* PAGE D'ACCUEIL - TABLEAU */
         #home-section {
             display: none;
         }
 
-        #home-section h2 {
-            font-size: 1.8em;
-            color: #a855f7;
-            margin: 30px 0 20px;
-            text-transform: uppercase;
-        }
-
-        .boxes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-
-        .box-card {
+        .boxes-table {
+            width: 100%;
+            margin-top: 30px;
+            border-collapse: collapse;
             background: #2a2a2a;
-            padding: 20px;
-            border-radius: 8px;
-            border: 2px solid #a855f7;
-            text-align: center;
+            border: 2px solid #ff9500;
         }
 
-        .box-card h3 {
-            color: #a855f7;
-            margin-bottom: 10px;
-            font-size: 1.3em;
+        .boxes-table thead {
+            background: #1a1a1a;
+            border-bottom: 2px solid #ff9500;
         }
 
-        .box-card p {
-            color: #fff;
-            font-size: 1.5em;
+        .boxes-table th {
+            padding: 15px;
+            text-align: left;
+            color: #ff9500;
             font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 1px;
+            border-right: 1px solid #444;
         }
 
-        #home-section > p {
-            font-size: 1.1em;
-            color: #888;
-            margin-top: 40px;
+        .boxes-table th:last-child {
+            border-right: none;
+        }
+
+        .boxes-table td {
+            padding: 15px;
+            border-right: 1px solid #444;
+            color: #fff;
+        }
+
+        .boxes-table td:last-child {
+            border-right: none;
+        }
+
+        .boxes-table tbody tr {
+            border-bottom: 1px solid #444;
+            transition: background 0.2s;
+        }
+
+        .boxes-table tbody tr:hover {
+            background: #333;
+        }
+
+        .boxes-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .box-name {
+            font-weight: bold;
+            color: #ff9500;
+            text-transform: uppercase;
+            min-width: 100px;
+        }
+
+        .box-price {
+            color: #60a5fa;
+            font-weight: bold;
+            min-width: 100px;
+        }
+
+        .rarity-cell {
             text-align: center;
+            min-width: 80px;
         }
 
-        #home-section > p strong {
-            color: #a855f7;
-        }
+        .rarity-commun { color: #9ca3af; }
+        .rarity-peucommun { color: #4ade80; }
+        .rarity-rare { color: #60a5fa; }
+        .rarity-epique { color: #a855f7; }
+        .rarity-legendaire { color: #fbbf24; }
     </style>
 </head>
 <body>
@@ -270,43 +321,67 @@
             <header>
                 <h1>🎮 Collection de Jeux Indés</h1>
             </header>
-            
-            <h2>Caisses disponibles</h2>
-            <div class="boxes-grid">
-                <div class="box-card">
-                    <h3>Standard</h3>
-                    <p>1000 px</p>
-                </div>
-                <div class="box-card">
-                    <h3>Premium</h3>
-                    <p>5000 px</p>
-                </div>
-                <div class="box-card">
-                    <h3>Deluxe</h3>
-                    <p>10000 px</p>
-                </div>
-                <div class="box-card">
-                    <h3>Collector</h3>
-                    <p>25000 px</p>
-                </div>
-                <div class="box-card">
-                    <h3>Limited</h3>
-                    <p>50000 px</p>
-                </div>
-            </div>
 
-            <h2>📊 Raretés</h2>
-            <div class="boxes-grid">
-                <div class="box-card" style="border-color: #9ca3af;">⬜ Commun</div>
-                <div class="box-card" style="border-color: #4ade80;">🟢 Peu commun</div>
-                <div class="box-card" style="border-color: #60a5fa;">🔵 Rare</div>
-                <div class="box-card" style="border-color: #a855f7;">🟣 Épique</div>
-                <div class="box-card" style="border-color: #fbbf24;">🟡 Légendaire</div>
-                <div class="box-card" style="border-color: #f43f5e;">🔴 GOTY</div>
-            </div>
-
-            <p>👉 Va sur <strong>#pseudoduviewer</strong> pour voir une collection !</p>
-            <p>Exemple: <strong>#astoumix</strong></p>
+            <table class="boxes-table">
+                <thead>
+                    <tr>
+                        <th>Caisse</th>
+                        <th>Coût</th>
+                        <th class="rarity-commun">Commun</th>
+                        <th class="rarity-peucommun">Peu Commun</th>
+                        <th class="rarity-rare">Rare</th>
+                        <th class="rarity-epique">Épique</th>
+                        <th class="rarity-legendaire">Légendaire</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="box-name">Standard</td>
+                        <td class="box-price">1 000 px</td>
+                        <td class="rarity-cell rarity-commun">60.0%</td>
+                        <td class="rarity-cell rarity-peucommun">30.0%</td>
+                        <td class="rarity-cell rarity-rare">6.0%</td>
+                        <td class="rarity-cell rarity-epique">3.8%</td>
+                        <td class="rarity-cell rarity-legendaire">0.2%</td>
+                    </tr>
+                    <tr>
+                        <td class="box-name">Premium</td>
+                        <td class="box-price">5 000 px</td>
+                        <td class="rarity-cell rarity-commun">30.0%</td>
+                        <td class="rarity-cell rarity-peucommun">30.0%</td>
+                        <td class="rarity-cell rarity-rare">30.0%</td>
+                        <td class="rarity-cell rarity-epique">9.0%</td>
+                        <td class="rarity-cell rarity-legendaire">1.0%</td>
+                    </tr>
+                    <tr>
+                        <td class="box-name">Deluxe</td>
+                        <td class="box-price">10 000 px</td>
+                        <td class="rarity-cell rarity-commun">10.0%</td>
+                        <td class="rarity-cell rarity-peucommun">20.0%</td>
+                        <td class="rarity-cell rarity-rare">45.0%</td>
+                        <td class="rarity-cell rarity-epique">20.0%</td>
+                        <td class="rarity-cell rarity-legendaire">5.0%</td>
+                    </tr>
+                    <tr>
+                        <td class="box-name">Collector</td>
+                        <td class="box-price">25 000 px</td>
+                        <td class="rarity-cell rarity-commun">5.0%</td>
+                        <td class="rarity-cell rarity-peucommun">10.0%</td>
+                        <td class="rarity-cell rarity-rare">30.0%</td>
+                        <td class="rarity-cell rarity-epique">45.0%</td>
+                        <td class="rarity-cell rarity-legendaire">10.0%</td>
+                    </tr>
+                    <tr>
+                        <td class="box-name">Limited</td>
+                        <td class="box-price">50 000 px</td>
+                        <td class="rarity-cell rarity-commun">0.0%</td>
+                        <td class="rarity-cell rarity-peucommun">0.0%</td>
+                        <td class="rarity-cell rarity-rare">20.0%</td>
+                        <td class="rarity-cell rarity-epique">55.0%</td>
+                        <td class="rarity-cell rarity-legendaire">25.0%</td>
+                    </tr>
+                </tbody>
+            </table>
         </section>
 
         <!-- PAGE COLLECTION -->
@@ -316,11 +391,11 @@
                 <div class="stats">
                     <div class="stat-item">
                         <div class="stat-label">Jeux classiques</div>
-                        <div class="stat-count" id="count-classic">0</div>
+                        <div class="stat-count"><span id="count-classic">0</span>/159</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-label">GOTY</div>
-                        <div class="stat-count" id="count-goty">0</div>
+                        <div class="stat-count"><span id="count-goty">0</span>/159</div>
                     </div>
                 </div>
             </header>
@@ -328,11 +403,11 @@
             <div class="controls">
                 <div class="control-group">
                     <label>Filtre:</label>
-                    <select id="filter">
-                        <option value="all">Tous</option>
-                        <option value="classic">Classiques</option>
-                        <option value="goty">GOTY</option>
-                    </select>
+                    <div class="filter-group">
+                        <button data-filter="all" class="active">Tous</button>
+                        <button data-filter="classic">Classiques</button>
+                        <button data-filter="goty">GOTY</button>
+                    </div>
                 </div>
                 <div class="control-group">
                     <label>Trier par:</label>
@@ -447,9 +522,13 @@
         document.addEventListener('DOMContentLoaded', () => {
             initPage();
             
-            document.getElementById("filter").addEventListener('change', (e) => {
-                currentFilter = e.target.value;
-                render();
+            document.querySelectorAll('[data-filter]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    currentFilter = e.target.dataset.filter;
+                    document.querySelectorAll('[data-filter]').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    render();
+                });
             });
             
             document.getElementById("sort").addEventListener('change', (e) => {
