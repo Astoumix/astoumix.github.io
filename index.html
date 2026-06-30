@@ -304,7 +304,6 @@
             const gotyCount = Object.keys(collection).filter(k => k < 0 && collection[k] > 0).length;
             document.getElementById("count-classic").textContent = classicCount;
             document.getElementById("count-goty").textContent = gotyCount;
-
             let games = [];
             Object.keys(collection).forEach(key => {
                 if (collection[key] > 0) {
@@ -313,19 +312,18 @@
                     games.push({id: gameId, ...GAMES[gameId], isGoty});
                 }
             });
-
             if (currentFilter === "classic") games = games.filter(g => !g.isGoty);
             if (currentFilter === "goty") games = games.filter(g => g.isGoty);
             if (currentSort === "name") games.sort((a, b) => a.name.localeCompare(b.name));
             if (currentSort === "year") games.sort((a, b) => b.year - a.year);
             if (currentSort === "rarity") games.sort((a, b) => RARITY_ORDER[b.rarity] - RARITY_ORDER[a.rarity]);
-
             gallery.innerHTML = games.length === 0 
                 ? '<div class="empty">Aucun jeu dans cette collection pour l\'instant</div>'
                 : games.map(g => {
                     const rarityClass = getRarityClass(g.rarity);
                     const cardClass = g.isGoty ? "goty" : rarityClass;
-                    return `<div class="card ${cardClass}"><div class="card-image"><img src="GamesImg/mockup${g.isGoty ? "/GOTY" : ""}/${g.id}.png" alt="${g.name}" onerror="this.style.display='none'"></div><div class="card-info"><div class="card-name">${g.name}</div><div class="card-year">${g.year}</div><div class="card-rarity">${g.isGoty ? "GOTY" : g.rarity}</div></div></div>`;
+                    const imageUrl = `https://raw.githubusercontent.com/Astoumix/astoumix.github.io/main/${g.isGoty ? "goty" : "games"}/${g.id}.png`;
+                    return `<div class="card ${cardClass}"><div class="card-image"><img src="${imageUrl}" alt="${g.name}" onerror="this.style.display='none'"></div><div class="card-info"><div class="card-name">${g.name}</div><div class="card-year">${g.year}</div><div class="card-rarity">${g.isGoty ? "GOTY" : g.rarity}</div></div></div>`;
                 }).join('');
         }
 
