@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collection de Jeux Indés</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: #1a1a1a;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #a855f7;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .username {
+            font-size: 1.2em;
+            color: #888;
+        }
+
+        .stats {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 20px;
+            font-size: 1.1em;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .stat-count {
+            font-weight: bold;
+            color: #a855f7;
+            font-size: 1.3em;
+        }
+
+        .controls {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .control-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        label {
+            font-weight: bold;
+            color: #888;
+        }
+
+        select, button {
+            padding: 10px 15px;
+            background: #2a2a2a;
+            color: #fff;
+            border: 1px solid #444;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.2s ease;
+        }
+
+        select:hover, button:hover {
+            border-color: #a855f7;
+            background: #333;
+        }
+
+        select:focus, button:focus {
+            outline: none;
+            border-color: #a855f7;
+            box-shadow: 0 0 8px rgba(168, 85, 247, 0.3);
+        }
+
+        button.active {
+            background: #a855f7;
+            border-color: #a855f7;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: #2a2a2a;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+            border: 3px solid #444;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 180px;
+            background: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            color: #444;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 10px;
+        }
+
+        .card-info {
+            padding: 12px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-name {
+            font-weight: bold;
+            font-size: 0.95em;
+            margin-bottom: 6px;
+            line-height: 1.2;
+            color: #fff;
+        }
+
+        .card-year {
+            font-size: 0.85em;
+            color: #888;
+            margin-bottom: 4px;
+        }
+
+        .card-rarity {
+            font-size: 0.8em;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 3px;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .card.commun { border-color: #9ca3af; }
+        .card.commun .card-rarity { background: #9ca3af; color: #000; }
+        
+        .card.peucommun { border-color: #4ade80; }
+        .card.peucommun .card-rarity { background: #4ade80; color: #000; }
+        
+        .card.rare { border-color: #60a5fa; }
+        .card.rare .card-rarity { background: #60a5fa; color: #000; }
+        
+        .card.epique { border-color: #a855f7; }
+        .card.epique .card-rarity { background: #a855f7; color: #fff; }
+        
+        .card.legendaire { border-color: #fbbf24; }
+        .card.legendaire .card-rarity { background: #fbbf24; color: #000; }
+
+        .card.goty {
+            border-color: #f43f5e;
+            box-shadow: 0 0 15px rgba(244, 63, 94, 0.3);
+        }
+        .card.goty .card-rarity {
+            background: #f43f5e;
+            color: #fff;
+        }
+
+        .empty {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            color: #888;
+            font-size: 1.1em;
+        }
+
+        .goty-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #f43f5e;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Collection de Jeux Indés</h1>
+            <p class="username" id="username">Chargement...</p>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-label">Jeux Classiques</div>
+                    <div class="stat-count"><span id="count-classic">0</span>/159</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">GOTY</div>
+                    <div class="stat-count"><span id="count-goty">0</span>/159</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label>Filtrer:</label>
+                <button id="filter-all" class="active">Tous</button>
+                <button id="filter-classic">Classiques</button>
+                <button id="filter-goty">GOTY</button>
+            </div>
+            <div class="control-group">
+                <label>Trier par:</label>
+                <select id="sort-select">
+                    <option value="name">Nom (A-Z)</option>
+                    <option value="year">Année (Récent)</option>
+                    <option value="rarity">Rareté</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="gallery" id="gallery"></div>
+    </div>
+
+    <script>
+        const GAMES = {1:{name:"The Binding of Isaac: Rebirth",year:2014,rarity:"Légendaire"},2:{name:"RimWorld",year:2018,rarity:"Rare"},3:{name:"Samorost 3",year:2016,rarity:"Commun"},4:{name:"Super Meat Boy",year:2010,rarity:"Légendaire"},5:{name:"Machinarium",year:2009,rarity:"Commun"},6:{name:"Inside",year:2016,rarity:"Rare"},7:{name:"Outer Wilds",year:2019,rarity:"Légendaire"},8:{name:"Satisfactory",year:2024,rarity:"Rare"},9:{name:"Undertale",year:2015,rarity:"Rare"},10:{name:"Hades",year:2020,rarity:"Légendaire"},11:{name:"Kenshi",year:2018,rarity:"Peu commun"},12:{name:"Yuppie Psycho",year:2019,rarity:"Commun"},13:{name:"Beat Saber",year:2018,rarity:"Peu commun"},14:{name:"Chants of Sennaar",year:2023,rarity:"Commun"},15:{name:"To the Moon",year:2011,rarity:"Peu commun"},16:{name:"Botanicula",year:2012,rarity:"Peu commun"},17:{name:"Mark of the Ninja",year:2012,rarity:"Peu commun"},18:{name:"Rogue Legacy",year:2013,rarity:"Commun"},19:{name:"FEZ",year:2012,rarity:"Epique"},20:{name:"Valheim",year:2026,rarity:"Epique"},21:{name:"Redout",year:2016,rarity:"Commun"},22:{name:"FTL: Faster Than Light",year:2012,rarity:"Rare"},23:{name:"Norco",year:2022,rarity:"Peu commun"},24:{name:"Signalis",year:2022,rarity:"Peu commun"},25:{name:"Stardew Valley",year:2016,rarity:"Epique"},26:{name:"The End is Nigh",year:2017,rarity:"Peu commun"},27:{name:"Nother Journey",year:2021,rarity:"Commun"},28:{name:"Against the Storm",year:2023,rarity:"Commun"},29:{name:"Risk of Rain",year:2013,rarity:"Rare"},30:{name:"Banished",year:2014,rarity:"Commun"},31:{name:"FAR: Changing Tides",year:2022,rarity:"Rare"},32:{name:"Redout II",year:2022,rarity:"Commun"},33:{name:"Salt and Sanctuary",year:2016,rarity:"Commun"},34:{name:"Keep Talking and Nobody Explodes",year:2015,rarity:"Rare"},35:{name:"Hollow Knight",year:2017,rarity:"Légendaire"},36:{name:"TowerFall Ascension",year:2014,rarity:"Peu commun"},37:{name:"Endless Legend",year:2014,rarity:"Commun"},38:{name:"A Hat in Time",year:2017,rarity:"Peu commun"},39:{name:"Dusk",year:2018,rarity:"Commun"},40:{name:"Return of the Obra Dinn",year:2018,rarity:"Rare"},41:{name:"ZERO Sievert",year:2024,rarity:"Commun"},42:{name:"Pyre",year:2017,rarity:"Rare"},43:{name:"Undermine",year:2020,rarity:"Commun"},44:{name:"The Stanley Parable",year:2013,rarity:"Epique"},45:{name:"Brothers: A Tale of Two Sons",year:2013,rarity:"Rare"},46:{name:"Pseudoregalia",year:2023,rarity:"Commun"},47:{name:"Bastion",year:2011,rarity:"Rare"},48:{name:"Battleblock Theater",year:2014,rarity:"Rare"},49:{name:"Into The Radius",year:2020,rarity:"Commun"},50:{name:"Broforce",year:2015,rarity:"Peu commun"},51:{name:"Dungeon of the Endless",year:2014,rarity:"Peu commun"},52:{name:"Ori and the Blind Forest",year:2015,rarity:"Epique"},53:{name:"The Legend of Bum-Bo",year:2019,rarity:"Commun"},54:{name:"Amnesia: The Dark Descent",year:2010,rarity:"Epique"},55:{name:"Warhammer: Vermintide 2",year:2018,rarity:"Rare"},56:{name:"Celeste",year:2018,rarity:"Légendaire"},57:{name:"Doki Doki Literature Club!",year:2017,rarity:"Peu commun"},58:{name:"Terraria",year:2011,rarity:"Epique"},59:{name:"Per Aspera",year:2020,rarity:"Commun"},60:{name:"Dwarf Fortress",year:2022,rarity:"Peu commun"},61:{name:"Risk of Rain 2",year:2020,rarity:"Epique"},62:{name:"Guacamelee! 2",year:2018,rarity:"Rare"},63:{name:"Streets of Rogue",year:2019,rarity:"Peu commun"},64:{name:"Creeper World 3: Arc Eternal",year:2014,rarity:"Commun"},65:{name:"Chuchel",year:2018,rarity:"Commun"},66:{name:"Runner 2: Future Legend of Rhythm Alien",year:2013,rarity:"Rare"},67:{name:"Samurai Gunn",year:2013,rarity:"Commun"},68:{name:"Timberborn",year:2026,rarity:"Commun"},69:{name:"Blade and Sorcery",year:2018,rarity:"Commun"},70:{name:"Shovel Knight",year:2014,rarity:"Rare"},71:{name:"Phasmophobia",year:2024,rarity:"Rare"},72:{name:"Super Hexagon",year:2012,rarity:"Rare"},73:{name:"Streets of Rage 4",year:2020,rarity:"Peu commun"},74:{name:"Horizon Chase Turbo",year:2018,rarity:"Commun"},75:{name:"They Are Billions",year:2019,rarity:"Rare"},76:{name:"The Swapper",year:2013,rarity:"Commun"},77:{name:"Supraland",year:2019,rarity:"Rare"},78:{name:"Tales From Space: Mutant Blobs Attack",year:2012,rarity:"Commun"},79:{name:"Thumper",year:2016,rarity:"Commun"},80:{name:"Darkest Dungeon",year:2016,rarity:"Peu commun"},81:{name:"Carrion",year:2020,rarity:"Peu commun"},82:{name:"Dead Cells",year:2018,rarity:"Epique"},83:{name:"Walkabout Mini Golf",year:2020,rarity:"Commun"},84:{name:"Chroma Squad",year:2015,rarity:"Commun"},85:{name:"Lethal League",year:2014,rarity:"Peu commun"},86:{name:"FAR: Lone Sails",year:2018,rarity:"Peu commun"},87:{name:"Frostpunk",year:2018,rarity:"Rare"},88:{name:"Teardown",year:2022,rarity:"Rare"},89:{name:"Divinity: Original Sin - Enhanced Edition",year:2015,rarity:"Rare"},90:{name:"Owlboy",year:2016,rarity:"Commun"},91:{name:"A Story About My Uncle",year:2014,rarity:"Peu commun"},92:{name:"Kingdom: New Lands",year:2016,rarity:"Peu commun"},93:{name:"Baba Is You",year:2019,rarity:"Peu commun"},94:{name:"Katana Zero",year:2019,rarity:"Commun"},95:{name:"Minit",year:2018,rarity:"Commun"},96:{name:"ClusterTruck",year:2016,rarity:"Peu commun"},97:{name:"The Witness",year:2016,rarity:"Légendaire"},98:{name:"Sludge Life",year:2020,rarity:"Commun"},99:{name:"Superhot",year:2016,rarity:"Epique"},100:{name:"Starbound",year:2016,rarity:"Rare"},101:{name:"SteamWorld Heist",year:2015,rarity:"Peu commun"},102:{name:"SteamWorld Dig 2",year:2017,rarity:"Peu commun"},103:{name:"GRIS",year:2018,rarity:"Rare"},104:{name:"One Finger Death Punch",year:2013,rarity:"Commun"},105:{name:"The Messenger",year:2018,rarity:"Commun"},106:{name:"Gato Roboto",year:2019,rarity:"Commun"},107:{name:"Beat Hazard",year:2010,rarity:"Rare"},108:{name:"Kingdom Rush Frontiers",year:2013,rarity:"Commun"},109:{name:"Prison Architect",year:2015,rarity:"Rare"},110:{name:"Bleed",year:2012,rarity:"Peu commun"},111:{name:"Hotline Miami",year:2012,rarity:"Légendaire"},112:{name:"Cliff Empire",year:2018,rarity:"Commun"},113:{name:"Blasphemous",year:2019,rarity:"Rare"},114:{name:"Hexcells Infinite",year:2014,rarity:"Commun"},115:{name:"Downwell",year:2015,rarity:"Commun"},116:{name:"Pilgrims",year:2019,rarity:"Peu commun"},117:{name:"Death Must Die",year:2023,rarity:"Commun"},118:{name:"Shantae and the Seven Sirens",year:2020,rarity:"Peu commun"},119:{name:"Jazzpunk",year:2014,rarity:"Commun"},120:{name:"Runestone Keeper",year:2015,rarity:"Commun"},121:{name:"A Short Hike",year:2019,rarity:"Commun"},122:{name:"Mount & Blade: Warband",year:2010,rarity:"Peu commun"},123:{name:"Luftrausers",year:2014,rarity:"Commun"},124:{name:"Reassembly",year:2015,rarity:"Commun"},125:{name:"Limbo",year:2010,rarity:"Rare"},126:{name:"Heave Ho",year:2019,rarity:"Peu commun"},127:{name:"Braid",year:2008,rarity:"Peu commun"},128:{name:"Papers, Please",year:2013,rarity:"Epique"},129:{name:"Treasure Adventure Game",year:2011,rarity:"Commun"},130:{name:"Soldat",year:2002,rarity:"Commun"},131:{name:"UnMetal",year:2021,rarity:"Commun"},132:{name:"Nidhogg",year:2014,rarity:"Peu commun"},133:{name:"Frogatto & Friends",year:2010,rarity:"Commun"},134:{name:"Cursed Castilla",year:2016,rarity:"Commun"},135:{name:"Super Hydorah",year:2016,rarity:"Commun"},136:{name:"Super TIME Force Ultra",year:2014,rarity:"Commun"},137:{name:"Overcooked",year:2016,rarity:"Peu commun"},138:{name:"Brotato",year:2013,rarity:"Epique"},139:{name:"Vampire Survivors",year:2022,rarity:"Rare"},140:{name:"Pony Island",year:2016,rarity:"Rare"},141:{name:"Noita",year:2020,rarity:"Peu commun"},142:{name:"Dust: An Elysian Tail",year:2012,rarity:"Peu commun"},143:{name:"Black Skylands",year:2023,rarity:"Commun"},144:{name:"Audiosurf",year:2008,rarity:"Peu commun"},145:{name:"Subnautica",year:2018,rarity:"Epique"},146:{name:"My Time at Portia",year:2019,rarity:"Peu commun"},147:{name:"Transistor",year:2014,rarity:"Epique"},148:{name:"Kingdom: Two Crowns",year:2018,rarity:"Peu commun"},149:{name:"Wargroove",year:2019,rarity:"Commun"},150:{name:"Nuclear Throne",year:2015,rarity:"Peu commun"},151:{name:"Everhood",year:2021,rarity:"Commun"},152:{name:"Airships: Conquer the Skies",year:2018,rarity:"Commun"},153:{name:"Enter the Gungeon",year:2016,rarity:"Epique"},154:{name:"Hidden Folks",year:2017,rarity:"Commun"},155:{name:"This War of Mine",year:2014,rarity:"Epique"},156:{name:"WorldBox",year:2021,rarity:"Commun"},157:{name:"The Henry Stickmin Collection",year:2020,rarity:"Commun"},158:{name:"Airborne Kingdom",year:2020,rarity:"Commun"},159:{name:"20 Minutes Till Dawn",year:2023,rarity:"Peu commun"}};
+        const RARITY_ORDER = {"Commun":0,"Peu commun":1,"Rare":2,"Epique":3,"Légendaire":4};
+        let collection = {};
+        let currentFilter = "all";
+        let currentSort = "name";
+
+        function getUsername() {
+            const parts = window.location.pathname.split('/').filter(p => p);
+            return parts[parts.length - 1] || "astoumix";
+        }
+
+        function loadCollection() {
+            const username = getUsername();
+            document.getElementById("username").textContent = `Collection de ${username}`;
+            const testGames = [4, 7, 10, 35, 56, 97, 111, 1, 25, 52, 61, 82, 99, 128, 145, 147, 155];
+            testGames.forEach(id => {
+                collection[id] = 1;
+                collection[-id] = Math.random() > 0.7 ? 1 : 0;
+            });
+            render();
+        }
+
+        function render() {
+            const gallery = document.getElementById("gallery");
+            const classicCount = Object.keys(collection).filter(k => k > 0).length;
+            const gotyCount = Object.keys(collection).filter(k => k < 0 && collection[k] > 0).length;
+            document.getElementById("count-classic").textContent = classicCount;
+            document.getElementById("count-goty").textContent = gotyCount;
+
+            let games = [];
+            Object.keys(collection).forEach(key => {
+                if (collection[key] > 0) {
+                    const gameId = Math.abs(parseInt(key));
+                    const isGoty = key < 0;
+                    games.push({id: gameId, ...GAMES[gameId], isGoty});
+                }
+            });
+
+            if (currentFilter === "classic") games = games.filter(g => !g.isGoty);
+            if (currentFilter === "goty") games = games.filter(g => g.isGoty);
+            if (currentSort === "name") games.sort((a, b) => a.name.localeCompare(b.name));
+            if (currentSort === "year") games.sort((a, b) => b.year - a.year);
+            if (currentSort === "rarity") games.sort((a, b) => RARITY_ORDER[b.rarity] - RARITY_ORDER[a.rarity]);
+
+            gallery.innerHTML = games.length === 0 
+                ? '<div class="empty">Aucun jeu dans cette collection pour l\'instant</div>'
+                : games.map(g => `<div class="card ${g.isGoty ? "goty" : g.rarity.toLowerCase()}"><div class="card-image">${g.isGoty ? '<div class="goty-badge">⭐ GOTY</div>' : ''}<img src="GamesImg/mockup${g.isGoty ? "/GOTY" : ""}/${g.id}.png" alt="${g.name}" onerror="this.style.display='none'"></div><div class="card-info"><div class="card-name">${g.name}</div><div class="card-year">${g.year}</div><div class="card-rarity">${g.isGoty ? "GOTY" : g.rarity}</div></div></div>`).join('');
+        }
+
+        document.getElementById("filter-all").addEventListener("click", function() {
+            currentFilter = "all";
+            document.querySelectorAll(".controls button").forEach(b => b.classList.remove("active"));
+            this.classList.add("active");
+            render();
+        });
+
+        document.getElementById("filter-classic").addEventListener("click", function() {
+            currentFilter = "classic";
+            document.querySelectorAll(".controls button").forEach(b => b.classList.remove("active"));
+            this.classList.add("active");
+            render();
+        });
+
+        document.getElementById("filter-goty").addEventListener("click", function() {
+            currentFilter = "goty";
+            document.querySelectorAll(".controls button").forEach(b => b.classList.remove("active"));
+            this.classList.add("active");
+            render();
+        });
+
+        document.getElementById("sort-select").addEventListener("change", function() {
+            currentSort = this.value;
+            render();
+        });
+
+        loadCollection();
+    </script>
+</body>
+</html>
