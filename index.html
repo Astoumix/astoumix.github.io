@@ -272,28 +272,35 @@
             
             async function fetchCollection() {
                 try {
-                    const response = await fetch('http://localhost:7474/collections/collections.json');
+                    const response = await fetch(
+                        `https://ygqtbfwolcbcaxmldhta.supabase.co/rest/v1/collections?username=eq.${username}`,
+                        {
+                            headers: {
+                                'apikey': 'sb_publishable_31KEJFCIQEFXF-1UQE586g_gX6R'
+                            }
+                        }
+                    );
+                    
                     const data = await response.json();
                     
-                    if (data.username && data.username.toLowerCase() === username) {
+                    if (data.length > 0) {
                         collection = {};
-                        data.collection.split(',').forEach(item => {
-                            const [id, qty] = item.split(':');
-                            if (id && qty) {
-                                collection[parseInt(id)] = parseInt(qty);
+                        data.forEach(item => {
+                            if (item.is_goty) {
+                                collection[-item.game_id] = item.quantity;
+                            } else {
+                                collection[item.game_id] = item.quantity;
                             }
                         });
-                        render();
                     }
+                    
+                    render();
                 } catch (error) {
-                    // Le fichier n'existe pas encore ou pas accessible
+                    console.log('Loading collection...');
                 }
             }
             
-            // Fetch une première fois
             await fetchCollection();
-            
-            // Puis toutes les 2 secondes
             setInterval(fetchCollection, 2000);
         }
 
