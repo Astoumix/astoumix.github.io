@@ -272,15 +272,9 @@
             
             async function fetchCollection() {
                 try {
-                    const response = await fetch(
-                        `https://ygqtbfwolcbcaxmldhta.supabase.co/rest/v1/collections?username=eq.${username}`,
-                        {
-                            headers: {
-                                'apikey': 'sb_publishable_31KEJFCIQEFXF-1UQE586g_gX6R'
-                            }
-                        }
-                    );
+                    const url = `https://ygqtbfwolcbcaxmldhta.supabase.co/rest/v1/collections?username=eq.${username}&apikey=sb_publishable_31KEJFCIQEFXF-1UQE586g_gX6R`;
                     
+                    const response = await fetch(url);
                     const data = await response.json();
                     
                     if (data.length > 0) {
@@ -299,10 +293,10 @@
                     console.log('Loading collection...');
                 }
             }
-            
-            await fetchCollection();
-            setInterval(fetchCollection, 2000);
-        }
+    
+    await fetchCollection();
+    setInterval(fetchCollection, 2000);
+}
 
         function render() {
             const gallery = document.getElementById("gallery");
