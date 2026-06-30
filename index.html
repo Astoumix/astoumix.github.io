@@ -373,7 +373,7 @@
             
             async function fetchCollection() {
                 try {
-                    const url = `https://ygqtbfwolcbcaxmldhta.supabase.co/rest/v1/collections?username=eq.${username}&apikey=sb_publishable_31KEJFCIQEFXF-1UQE586g_gX6R`;
+                    const url = `https://ygqtbfwolcbcaxmldhta.supabase.co/rest/v1/collections?username=eq.${username}&apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlncXRiZndvbGNiY2F4bWxkaHRhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4MjE3NjAsImV4cCI6MjA5ODM5Nzc2MH0.8NItd71fPdw8BZggcOyJ1H_F0HjYGju2ydrIu7kNWfc`;
                     
                     const response = await fetch(url);
                     const data = await response.json();
