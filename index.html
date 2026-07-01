@@ -411,11 +411,11 @@
                 </div>
                 <div class="control-group">
                     <label>Trier par:</label>
-                    <select id="sort">
-                        <option value="name">Nom</option>
-                        <option value="year">Année</option>
-                        <option value="rarity">Rareté</option>
-                    </select>
+                    <div class="filter-group">
+                        <button data-sort="name" class="active">Nom</button>
+                        <button data-sort="year">Année</button>
+                        <button data-sort="rarity">Rareté</button>
+                    </div>
                 </div>
             </div>
 
@@ -531,9 +531,13 @@
                 });
             });
             
-            document.getElementById("sort").addEventListener('change', (e) => {
-                currentSort = e.target.value;
-                render();
+            document.querySelectorAll('[data-sort]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    currentSort = e.target.dataset.sort;
+                    document.querySelectorAll('[data-sort]').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    render();
+                });
             });
         });
     </script>
