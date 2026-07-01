@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Collection de Jeux Indés</title>
+    <title>GameDex</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -448,7 +448,8 @@
 
         async function loadCollection() {
             const username = getUsername();
-            document.getElementById("title").textContent = `Collection de ${username}`;
+            document.title = `GameDex - ${username}`;
+            document.getElementById("title").textContent = `GameDex - ${username}`;
             
             async function fetchCollection() {
                 try {
