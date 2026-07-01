@@ -264,6 +264,7 @@
             color: #fbbf24;
             font-weight: bold;
             font-size: 0.85em;
+            margin-bottom: 4px;
         }
 
         .card-year {
@@ -464,12 +465,11 @@
             document.title = `GameDex - ${username}`;
             document.getElementById("title").textContent = `GameDex - ${username}`;
             
-            // Arrête l'ancien interval
             if (collectionInterval) clearInterval(collectionInterval);
             
             async function fetchCollection() {
                 try {
-                    const url = `https://ygqtbfwolcbcaxmldhta.supabase.co/rest/v1/collections?username=eq.${username}&apikey=esb_publishable_3iKEJfCiQEFxF-1UQE586g_ggX6RDqG`;
+                    const url = `https://ygqtbfwolcbcaxmldhta.supabase.co/rest/v1/collections?username=eq.${username}&apikey=sb_publishable_3iKEJfCiQEFxF-1UQE586g_ggX6RDqG`;
                     
                     const response = await fetch(url);
                     const data = await response.json();
