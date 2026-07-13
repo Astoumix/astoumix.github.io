@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GameDex</title>
+    <title>Les infos - twitch.tv/astoumix</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Electrolize&display=swap" rel="stylesheet">
@@ -21,22 +21,13 @@
             margin: 0 auto;
         }
 
-        #home-section header {
+        #home-section header, #collection-section header {
             text-align: left;
             position: relative;
             width: 100%;
             height: 75px;
             background: #111;
             border-bottom: 1px solid #222;
-            box-shadow: 0 3px 10px #222;
-        }
-        #collection-section header {
-            text-align: left;
-            position: relative;
-            width: 100%;
-            height: 75px;
-            background: #111;
-            border-bottom: 1px solid #333;
         }
 
         h1 {
@@ -67,26 +58,25 @@
             margin-top: 10px;
             font-size: 1.1em;
             position: absolute;
-            left: 400px;
-            top: 0;
+            left: 34px;
+            top: 75px;
         }
 
         .stat-item {
             display: flex;
-            flex-direction: column;
             align-items: center;
         }
 
         .stat-label {
             color: #f43f5e;
-            font-size: 0.9em;
-            margin-bottom: 5px;
+            font-size: 15px;
         }
 
         .stat-count {
             font-weight: bold;
             color: #f1f1f1;
-            font-size: 1.3em;
+            font-size: 15px;
+            margin-left: 5px;
         }
 
         .controls {
@@ -352,7 +342,6 @@
             border-top: 1px solid #222;
             position: relative;
             top: 20px;
-            box-shadow: 0 3px 10px #222;
         }
         footer a {
             text-decoration: none;
@@ -562,18 +551,17 @@
         <section id="collection-section">
             <header>
                 <h1 id="title">GameDex</h1>
-                <div class="stats">
-                    <div class="stat-item">
-                        <div class="stat-label">Jeux classiques</div>
-                        <div class="stat-count"><span id="count-classic">0</span>/159</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">GOTY</div>
-                        <div class="stat-count"><span id="count-goty">0</span>/159</div>
-                    </div>
-                </div>
             </header>
-
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-label">Jeux classiques</div>
+                    <div class="stat-count"><span id="count-classic">0</span>/159</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">GOTY</div>
+                    <div class="stat-count"><span id="count-goty">0</span>/159</div>
+                </div>
+            </div>
             <div class="controls">
                 <div class="control-group">
                     <label>Filtre:</label>
