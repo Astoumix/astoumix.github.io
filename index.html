@@ -461,14 +461,31 @@
         }
 
         .btn-index {
-            padding: 10px;
-            margin: 5px;
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 8px 16px;
+            margin: 0;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .btn-index:hover {
+            border-color: #f43f5e;
+            background: #222;
         }
 
         .btn-index a {
             text-decoration: none;
             color: #f43f5e;
             text-transform: uppercase;
+            font-size: 0.8em;
+            font-weight: bold;
+            letter-spacing: 1px;
         }
 
         footer {
@@ -737,9 +754,9 @@
                     <div class="control-group">
                         <label>Trier par:</label>
                         <div class="filter-group">
-                            <button data-sort="name" class="active">Nom</button>
-                            <button data-sort="year">Année</button>
-                            <button data-sort="rarity">Rareté</button>
+                            <button data-sort="name" class="active">Nom<span class="sort-arrow"></span></button>
+                            <button data-sort="year">Année<span class="sort-arrow"></span></button>
+                            <button data-sort="rarity">Rareté<span class="sort-arrow"></span></button>
                         </div>
                     </div>
                 </div>
@@ -816,6 +833,10 @@
         let collection = {};
         let currentFilter = "all";
         let currentSort = "name";
+        // 1 = ordre par défaut de chaque tri (A→Z pour le nom, plus
+        // récent/rare d'abord pour année/rareté), -1 = ordre inversé.
+        // Recliquer sur un tri déjà actif bascule cette direction.
+        let currentSortDirection = 1;
 
         function getUsername() {
             return (window.location.hash.substring(1) || '').toLowerCase();
@@ -871,6 +892,25 @@
             collectionInterval = setInterval(fetchCollection, 2000);
         }
 
+        // Affiche une flèche à côté du tri actif : ▲ = ordre "croissant" au
+        // sens naturel de la colonne (A→Z pour le nom), ▼ = ordre inversé.
+        // Pour année/rareté, l'ordre "par défaut" (direction 1) est en fait
+        // décroissant (plus récent / plus rare en premier) -> logique inversée.
+        function updateSortArrows() {
+            document.querySelectorAll('[data-sort]').forEach(btn => {
+                const arrow = btn.querySelector('.sort-arrow');
+                if (!arrow) return;
+                if (btn.dataset.sort !== currentSort) {
+                    arrow.textContent = '';
+                    return;
+                }
+                const ascending = btn.dataset.sort === 'name'
+                    ? currentSortDirection === 1
+                    : currentSortDirection === -1;
+                arrow.textContent = ascending ? ' ▲' : ' ▼';
+            });
+        }
+
         function render() {
             const gallery = document.getElementById("gallery");
             const classicCount = Object.keys(collection).filter(k => k > 0).length;
@@ -889,9 +929,9 @@
             if (currentFilter === "classic") games = games.filter(g => !g.isGoty);
             if (currentFilter === "goty") games = games.filter(g => g.isGoty);
             if (currentFilter === "doublon") games = games.filter(g => g.quantity >= 2);
-            if (currentSort === "name") games.sort((a, b) => a.name.localeCompare(b.name));
-            if (currentSort === "year") games.sort((a, b) => b.year - a.year);
-            if (currentSort === "rarity") games.sort((a, b) => RARITY_ORDER[b.rarity] - RARITY_ORDER[a.rarity]);
+            if (currentSort === "name") games.sort((a, b) => currentSortDirection * a.name.localeCompare(b.name));
+            if (currentSort === "year") games.sort((a, b) => currentSortDirection * (b.year - a.year));
+            if (currentSort === "rarity") games.sort((a, b) => currentSortDirection * (RARITY_ORDER[b.rarity] - RARITY_ORDER[a.rarity]));
             gallery.innerHTML = games.length === 0 
                 ? '<div class="empty">Aucun jeu dans cette collection pour l\'instant</div>'
                 : games.map(g => {
@@ -1053,12 +1093,23 @@
 
             document.querySelectorAll('[data-sort]').forEach(btn => {
                 btn.addEventListener('click', (e) => {
-                    currentSort = e.target.dataset.sort;
+                    // currentTarget (pas target) : le clic peut tomber sur la
+                    // <span class="sort-arrow"> à l'intérieur du bouton.
+                    const clicked = e.currentTarget;
+                    if (clicked.dataset.sort === currentSort) {
+                        // Reclic sur le tri déjà actif -> on inverse l'ordre.
+                        currentSortDirection *= -1;
+                    } else {
+                        currentSort = clicked.dataset.sort;
+                        currentSortDirection = 1;
+                    }
                     document.querySelectorAll('[data-sort]').forEach(b => b.classList.remove('active'));
-                    e.target.classList.add('active');
+                    clicked.classList.add('active');
+                    updateSortArrows();
                     render();
                 });
             });
+            updateSortArrows();
 
             document.querySelectorAll('[data-pfilter]').forEach(btn => {
                 btn.addEventListener('click', (e) => {
