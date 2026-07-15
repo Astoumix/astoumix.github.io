@@ -164,8 +164,9 @@
 
         .boxes-table {max-width: 750px;}
         .spin-table {max-width: 395px;}
+        .poke-rate-table {max-width: 205px;}
 
-        .boxes-table, .spin-table {
+        .boxes-table, .spin-table, .poke-rate-table {
             margin: 30px auto;
             border-collapse: collapse;
             background: #2a2a2a;
@@ -174,12 +175,12 @@
             overflow-x: auto;
         }
 
-        .boxes-table thead, .spin-table thead {
+        .boxes-table thead, .spin-table thead, .poke-rate-table thead {
             background: #1a1a1a;
             border-bottom: 2px solid #f43f5e;
         }
 
-        .boxes-table th, .spin-table th {
+        .boxes-table th, .spin-table th, .poke-rate-table th {
             padding: 15px;
             text-align: center;
             color: #f43f5e;
@@ -190,31 +191,31 @@
             border-right: 1px solid #444;
         }
 
-        .boxes-table th:last-child, .spin-table th:last-child {
+        .boxes-table th:last-child, .spin-table th:last-child, .poke-rate-table th:last-child {
             border-right: none;
         }
 
-        .boxes-table td, .spin-table td {
+        .boxes-table td, .spin-table td, .poke-rate-table td {
             padding: 15px;
             border-right: 1px solid #444;
             color: #fff;
             font-size: 0.8em;
         }
 
-        .boxes-table td:last-child, .spin-table td:last-child {
+        .boxes-table td:last-child, .spin-table td:last-child, .poke-rate-table td:last-child {
             border-right: none;
         }
 
-        .boxes-table tbody tr, .spin-table tbody tr {
+        .boxes-table tbody tr, .spin-table tbody tr, .poke-rate-table tbody tr {
             border-bottom: 1px solid #444;
             transition: background 0.2s;
         }
 
-        .boxes-table tbody tr:hover, .spin-table tbody tr:hover {
+        .boxes-table tbody tr:hover, .spin-table tbody tr:hover, .poke-rate-table tbody tr:hover {
             background: #333;
         }
 
-        .boxes-table tbody tr:last-child, .spin-table tbody tr:last-child {
+        .boxes-table tbody tr:last-child, .spin-table tbody tr:last-child, .poke-rate-table tbody tr:last-child {
             border-bottom: none;
         }
 
@@ -240,6 +241,15 @@
         .rarity-rare { color: #60a5fa; }
         .rarity-epique { color: #a855f7; }
         .rarity-legendaire { color: #fbbf24; }
+
+        /* Rareté du Pokédex (!pokespin) — mêmes couleurs que les cartes
+           .card.poke-* de la galerie, l'overlay OBS et l'embed Discord. */
+        .prarity-commun     { color: #9aa79a; }
+        .prarity-peucommun  { color: #4fbf4f; }
+        .prarity-rare       { color: #5ab0e0; }
+        .prarity-epique     { color: #b57de8; }
+        .prarity-legendaire { color: #f0a030; }
+        .prarity-shiny      { color: #ffe14d; }
 
         .goty-desc {
             text-align: center;
@@ -698,7 +708,53 @@
             <div id="pokespin">
                 <div class="pokespintuto">
                     <h1>Les pokespins</h1>
-                    <p>Bientôt ! Je suis actuellement en train de travailler sur la mise en place de ce système !</p>
+                    <p>Les pokespins permettent de tenter d'attraper un Pokémon au hasard et de compléter votre Pokédex.</br>
+                    Chaque pokespin tire un Pokémon parmi tout le Pokédex national, avec une petite chance de tomber sur sa version shiny !</br>
+                    Vous pouvez faire un pokespin (gratuitement) toutes les <span style="font-weight:bold;">20 minutes</span>, réduit à <span style="font-weight:bold;">10 minutes</span> si vous êtes abonné à la chaîne.</p>
+                    </br>
+                    <h2>Les commandes</h2>
+                    <p>!pokespin - Lance un pokespin</p>
+                    <p>!gamedex - Permet d'obtenir le lien vers votre propre collection (Pokédex inclus)</p>
+                    </br>
+                    <h2>Les stats</h2>
+                </div>
+
+                <table class="poke-rate-table">
+                    <thead>
+                        <tr>
+                            <th>Rareté</th>
+                            <th>Chance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="prarity-commun">Commun</td>
+                            <td class="rarity-cell prarity-commun">61.06%</td>
+                        </tr>
+                        <tr>
+                            <td class="prarity-peucommun">Peu commun</td>
+                            <td class="rarity-cell prarity-peucommun">24.44%</td>
+                        </tr>
+                        <tr>
+                            <td class="prarity-rare">Rare</td>
+                            <td class="rarity-cell prarity-rare">11.11%</td>
+                        </tr>
+                        <tr>
+                            <td class="prarity-epique">Épique</td>
+                            <td class="rarity-cell prarity-epique">2.78%</td>
+                        </tr>
+                        <tr>
+                            <td class="prarity-legendaire">Légendaire</td>
+                            <td class="rarity-cell prarity-legendaire">0.56%</td>
+                        </tr>
+                        <tr>
+                            <td class="prarity-shiny">✨ Shiny</td>
+                            <td class="rarity-cell prarity-shiny">0.05%</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div>
+                    <p class="goty-desc">Un shiny peut être n'importe quel Pokémon, peu importe sa rareté normale !</p>
                 </div>
             </div>
             <div id="fish">
