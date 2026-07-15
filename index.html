@@ -42,6 +42,47 @@
         #collection-section header h1 {color: #f43f5e;;top: 28px;text-align: center;}
         #home-section header h1 {color: #f43f5e;position:absolute;top: 28px;width:100%;text-align: center;}
 
+        .pseudo-search {
+            display: flex;
+            justify-content: center;
+            padding: 24px 20px 0;
+        }
+        .pseudo-search form {
+            display: flex;
+            gap: 8px;
+        }
+        .pseudo-search input {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 9px 14px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.95em;
+            width: 220px;
+        }
+        .pseudo-search input:focus {
+            outline: none;
+            border-color: #f43f5e;
+        }
+        .pseudo-search input::placeholder {
+            color: #666;
+        }
+        .pseudo-search button {
+            background: #f43f5e;
+            border: none;
+            color: #fff;
+            padding: 9px 18px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .pseudo-search button:hover {
+            background: #dc2f4d;
+        }
+
         #openbox, #pixels, #spin, #pokespin, #fish {
             margin: 20px auto;
             box-shadow: 0 0 10px #222;
@@ -462,6 +503,12 @@
             <header>
                 <h1>twitch.tv/astoumix</h1>
             </header>
+            <div class="pseudo-search">
+                <form id="pseudo-search-form" autocomplete="off">
+                    <input type="text" id="pseudo-search-input" placeholder="Ton pseudo Twitch...">
+                    <button type="submit">Voir ma page</button>
+                </form>
+            </div>
             <div id="pixels">
                 <div class="pxtuto">
                     <h1>Les pixels</h1>
@@ -718,6 +765,7 @@
                         <label>Filtre:</label>
                         <div class="filter-group">
                             <button data-pfilter="all" class="active">Tous</button>
+                            <button data-pfilter="captured">Capturés</button>
                             <button data-pfilter="shiny">Shiny</button>
                             <button data-pfilter="doublon">Doublons</button>
                         </div>
@@ -936,6 +984,7 @@
                 }
             }
 
+            if (currentPokeFilter === "captured") cards = cards.filter(c => c.caught);
             if (currentPokeFilter === "shiny") cards = cards.filter(c => c.shiny);
             if (currentPokeFilter === "doublon") cards = cards.filter(c => c.qty >= 2);
 
@@ -982,6 +1031,16 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             initPage();
+
+            const pseudoSearchForm = document.getElementById('pseudo-search-form');
+            if (pseudoSearchForm) {
+                pseudoSearchForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const pseudo = document.getElementById('pseudo-search-input').value.trim().toLowerCase();
+                    if (!pseudo) return;
+                    window.location.hash = pseudo;
+                });
+            }
 
             document.querySelectorAll('[data-filter]').forEach(btn => {
                 btn.addEventListener('click', (e) => {
