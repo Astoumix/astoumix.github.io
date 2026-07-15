@@ -499,6 +499,7 @@
             gap: 10px;
         }
         .btn-index {
+            display: inline-block;
             padding: 8px 16px;
             margin: 0;
             background: #1a1a1a;
@@ -506,18 +507,16 @@
             border-radius: 6px;
             cursor: pointer;
             transition: border-color 0.2s ease, background 0.2s ease;
-        }
-        .btn-index:hover {
-            border-color: #f43f5e;
-            background: #222;
-        }
-        .btn-index a {
             text-decoration: none;
             color: #f43f5e;
             text-transform: uppercase;
             font-size: 0.8em;
             font-weight: bold;
             letter-spacing: 1px;
+        }
+        .btn-index:hover {
+            border-color: #f43f5e;
+            background: #222;
         }
         footer {
             text-align: center;
@@ -551,12 +550,12 @@
             <header>
                 <h1>twitch.tv/astoumix</h1>
                 <div class="header-buttons">
-                    <button class="btn-index"><a href="#classement">Classement</a></button>
+                    <a class="btn-index" href="#classement">Classement</a>
                 </div>
             </header>
             <div class="pseudo-search">
-                <form id="pseudo-search-form" autocomplete="off">
-                    <input type="text" id="pseudo-search-input" placeholder="Ton pseudo Twitch...">
+                <form class="pseudo-search-form" id="pseudo-search-form" autocomplete="off">
+                    <input type="text" class="pseudo-search-input" id="pseudo-search-input" placeholder="Ton pseudo Twitch...">
                     <button type="submit">Voir ma page</button>
                 </form>
             </div>
@@ -798,8 +797,8 @@
             <header>
                 <h1 id="title">GameDex</h1>
                 <div class="header-buttons">
-                    <button class="btn-index"><a href="/">Infos</a></button>
-                    <button class="btn-index"><a href="#classement">Classement</a></button>
+                    <a class="btn-index" href="/">Infos</a>
+                    <a class="btn-index" href="#classement">Classement</a>
                 </div>
             </header>
             <div class="collection-tabs">
@@ -871,9 +870,15 @@
             <header>
                 <h1 id="classement-title">Classement</h1>
                 <div class="header-buttons">
-                    <button class="btn-index"><a href="/">Infos</a></button>
+                    <a class="btn-index" href="/">Infos</a>
                 </div>
             </header>
+            <div class="pseudo-search">
+                <form class="pseudo-search-form" autocomplete="off">
+                    <input type="text" class="pseudo-search-input" placeholder="Ton pseudo Twitch...">
+                    <button type="submit">Voir ma page</button>
+                </form>
+            </div>
 
             <div class="collection-tabs">
                 <button id="ctab-btn-gamedex" class="active" data-ctab="gamedex">GameDex</button>
@@ -1282,15 +1287,15 @@
         window.addEventListener('hashchange', initPage);
         document.addEventListener('DOMContentLoaded', () => {
             initPage();
-            const pseudoSearchForm = document.getElementById('pseudo-search-form');
-            if (pseudoSearchForm) {
-                pseudoSearchForm.addEventListener('submit', (e) => {
+            document.querySelectorAll('.pseudo-search-form').forEach(form => {
+                form.addEventListener('submit', (e) => {
                     e.preventDefault();
-                    const pseudo = document.getElementById('pseudo-search-input').value.trim().toLowerCase();
+                    const input = form.querySelector('.pseudo-search-input');
+                    const pseudo = input.value.trim().toLowerCase();
                     if (!pseudo) return;
                     window.location.hash = pseudo;
                 });
-            }
+            });
             document.querySelectorAll('[data-filter]').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     currentFilter = e.target.dataset.filter;
