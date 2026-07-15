@@ -148,8 +148,7 @@
         .boxes-table {max-width: 750px;}
         .spin-table {max-width: 395px;}
         .poke-rate-table {max-width: 205px;}
-        .rank-table {max-width: 560px;}
-        .boxes-table, .spin-table, .poke-rate-table, .rank-table {
+        .boxes-table, .spin-table, .poke-rate-table {
             margin: 30px auto;
             border-collapse: collapse;
             background: #2a2a2a;
@@ -157,11 +156,11 @@
             display: block;
             overflow-x: auto;
         }
-        .boxes-table thead, .spin-table thead, .poke-rate-table thead, .rank-table thead {
+        .boxes-table thead, .spin-table thead, .poke-rate-table thead {
             background: #1a1a1a;
             border-bottom: 2px solid #f43f5e;
         }
-        .boxes-table th, .spin-table th, .poke-rate-table th, .rank-table th {
+        .boxes-table th, .spin-table th, .poke-rate-table th {
             padding: 15px;
             text-align: center;
             color: #f43f5e;
@@ -171,26 +170,26 @@
             letter-spacing: 1px;
             border-right: 1px solid #444;
         }
-        .boxes-table th:last-child, .spin-table th:last-child, .poke-rate-table th:last-child, .rank-table th:last-child {
+        .boxes-table th:last-child, .spin-table th:last-child, .poke-rate-table th:last-child {
             border-right: none;
         }
-        .boxes-table td, .spin-table td, .poke-rate-table td, .rank-table td {
+        .boxes-table td, .spin-table td, .poke-rate-table td {
             padding: 15px;
             border-right: 1px solid #444;
             color: #fff;
             font-size: 0.8em;
         }
-        .boxes-table td:last-child, .spin-table td:last-child, .poke-rate-table td:last-child, .rank-table td:last-child {
+        .boxes-table td:last-child, .spin-table td:last-child, .poke-rate-table td:last-child {
             border-right: none;
         }
-        .boxes-table tbody tr, .spin-table tbody tr, .poke-rate-table tbody tr, .rank-table tbody tr {
+        .boxes-table tbody tr, .spin-table tbody tr, .poke-rate-table tbody tr {
             border-bottom: 1px solid #444;
             transition: background 0.2s;
         }
-        .boxes-table tbody tr:hover, .spin-table tbody tr:hover, .poke-rate-table tbody tr:hover, .rank-table tbody tr:hover {
+        .boxes-table tbody tr:hover, .spin-table tbody tr:hover, .poke-rate-table tbody tr:hover {
             background: #333;
         }
-        .boxes-table tbody tr:last-child, .spin-table tbody tr:last-child, .poke-rate-table tbody tr:last-child, .rank-table tbody tr:last-child {
+        .boxes-table tbody tr:last-child, .spin-table tbody tr:last-child, .poke-rate-table tbody tr:last-child {
             border-bottom: none;
         }
         .box-name {
@@ -220,11 +219,62 @@
         .prarity-epique     { color: #b57de8; }
         .prarity-legendaire { color: #f0a030; }
         .prarity-shiny      { color: #ffe14d; }
-        /* ─── Classement ─────────────────────────────────────────────────── */
+        /* ─── Classement ─────────────────────────────────────────────────────
+           Contrairement aux tableaux de la page Infos (contenu fixe, largeurs
+           réglées à la main), les pseudos ici sont de longueur variable — donc
+           .rank-table utilise table-layout:fixed + colonnes en % pour garder
+           une largeur stable et remplie quel que soit le pseudo, plutôt que le
+           patron display:block/auto-layout des autres tableaux (qui rétrécit
+           la table en dessous de sa largeur max dès que le contenu est court,
+           laissant un espace vide disgracieux dans l'encadré). */
+        .rank-table-wrap {
+            max-width: 560px;
+            margin: 30px auto;
+            overflow-x: auto;
+            background: #2a2a2a;
+            border: 2px solid #f43f5e;
+        }
+        .rank-table {
+            width: 100%;
+            min-width: 380px;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+        .rank-table thead {
+            background: #1a1a1a;
+            border-bottom: 2px solid #f43f5e;
+        }
+        .rank-table th {
+            padding: 15px;
+            text-align: center;
+            color: #f43f5e;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 1px;
+            border-right: 1px solid #444;
+        }
+        .rank-table th:last-child { border-right: none; }
+        .rank-table td {
+            padding: 15px;
+            border-right: 1px solid #444;
+            color: #fff;
+            font-size: 0.8em;
+            overflow-wrap: break-word;
+        }
+        .rank-table td:last-child { border-right: none; }
+        .rank-table tbody tr {
+            border-bottom: 1px solid #444;
+            transition: background 0.2s;
+        }
+        .rank-table tbody tr:hover { background: #333; }
+        .rank-table tbody tr:last-child { border-bottom: none; }
+        .rank-table th:nth-child(1), .rank-table td:nth-child(1) { width: 18%; }
+        .rank-table th:nth-child(2), .rank-table td:nth-child(2) { width: 47%; }
+        .rank-table th:nth-child(3), .rank-table td:nth-child(3) { width: 35%; }
         .rank-position {
             text-align: center;
             font-weight: bold;
-            min-width: 50px;
         }
         .rank-pseudo {
             font-weight: bold;
@@ -234,7 +284,6 @@
             text-align: center;
             color: #60a5fa;
             font-weight: bold;
-            min-width: 90px;
         }
         .rank-table tbody tr.rank-1 .rank-position { color: #ffd700; }
         .rank-table tbody tr.rank-2 .rank-position { color: #c0c0c0; }
@@ -835,58 +884,66 @@
 
             <!-- Classement GameDex : jeux classiques débloqués (hors doublon, hors GOTY) -->
             <div id="view-classement-gamedex" class="classement-view">
-                <table class="rank-table">
-                    <thead>
-                        <tr>
-                            <th>Rang</th>
-                            <th>Pseudo</th>
-                            <th>Jeux débloqués</th>
-                        </tr>
-                    </thead>
-                    <tbody id="rank-body-gamedex"></tbody>
-                </table>
+                <div class="rank-table-wrap">
+                    <table class="rank-table">
+                        <thead>
+                            <tr>
+                                <th>Rang</th>
+                                <th>Pseudo</th>
+                                <th>Jeux débloqués</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rank-body-gamedex"></tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- Classement Pokédex : espèces capturées (hors doublon, hors shiny) -->
             <div id="view-classement-pokedex" class="classement-view" style="display:none;">
-                <table class="rank-table">
-                    <thead>
-                        <tr>
-                            <th>Rang</th>
-                            <th>Pseudo</th>
-                            <th>Pokémon capturés</th>
-                        </tr>
-                    </thead>
-                    <tbody id="rank-body-pokedex"></tbody>
-                </table>
+                <div class="rank-table-wrap">
+                    <table class="rank-table">
+                        <thead>
+                            <tr>
+                                <th>Rang</th>
+                                <th>Pseudo</th>
+                                <th>Pokémon capturés</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rank-body-pokedex"></tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- Classement GOTY : jeux GOTY débloqués (hors doublon) -->
             <div id="view-classement-goty" class="classement-view" style="display:none;">
-                <table class="rank-table">
-                    <thead>
-                        <tr>
-                            <th>Rang</th>
-                            <th>Pseudo</th>
-                            <th>GOTY débloqués</th>
-                        </tr>
-                    </thead>
-                    <tbody id="rank-body-goty"></tbody>
-                </table>
+                <div class="rank-table-wrap">
+                    <table class="rank-table">
+                        <thead>
+                            <tr>
+                                <th>Rang</th>
+                                <th>Pseudo</th>
+                                <th>GOTY débloqués</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rank-body-goty"></tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- Classement Shiny : Pokémon shiny capturés (hors doublon) -->
             <div id="view-classement-shiny" class="classement-view" style="display:none;">
-                <table class="rank-table">
-                    <thead>
-                        <tr>
-                            <th>Rang</th>
-                            <th>Pseudo</th>
-                            <th>Shiny capturés</th>
-                        </tr>
-                    </thead>
-                    <tbody id="rank-body-shiny"></tbody>
-                </table>
+                <div class="rank-table-wrap">
+                    <table class="rank-table">
+                        <thead>
+                            <tr>
+                                <th>Rang</th>
+                                <th>Pseudo</th>
+                                <th>Shiny capturés</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rank-body-shiny"></tbody>
+                    </table>
+                </div>
             </div>
         </section>
     </div>
