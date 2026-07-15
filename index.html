@@ -778,6 +778,7 @@
         }
 
         let collectionInterval;
+        let lastCollectionDataJson = null;
 
         async function loadCollection() {
             const username = getUsername();
@@ -792,7 +793,15 @@
                     
                     const response = await fetch(url);
                     const data = await response.json();
-                    
+
+                    // Même correctif que pour le Pokédex : on évite de
+                    // redessiner toute la galerie si rien n'a changé depuis le
+                    // dernier poll (évite un clignotement des images en cas
+                    // d'échec de chargement répété).
+                    const dataJson = JSON.stringify(data);
+                    if (dataJson === lastCollectionDataJson) return;
+                    lastCollectionDataJson = dataJson;
+
                     if (data.length > 0) {
                         collection = {};
                         data.forEach(item => {
@@ -803,7 +812,7 @@
                             }
                         });
                     }
-                    
+
                     render();
                 } catch (error) {
                     console.log('Loading collection...');
@@ -853,6 +862,7 @@
         let pokedexCollection = {};
         let currentPokeFilter = "all";
         let pokedexInterval;
+        let lastPokedexDataJson = null;
 
         function getRarityClassPoke(rarity) {
             return rarity.toLowerCase().replace(" ", "").replace(/é/g, "e");
@@ -872,6 +882,17 @@
 
                     const response = await fetch(url);
                     const data = await response.json();
+
+                    // On ne redessine TOUTE la galerie (1025+ cases) que si les
+                    // données ont réellement changé depuis le dernier poll.
+                    // Sans ça, renderPokedex() recréait chaque <img> toutes les
+                    // 2 secondes même quand rien n'avait bougé : pour les
+                    // sprites en repli PNG, ça relançait à chaque fois une
+                    // tentative de chargement du gif (échec) suivie du switch
+                    // vers le PNG, d'où le clignotement observé.
+                    const dataJson = JSON.stringify(data);
+                    if (dataJson === lastPokedexDataJson) return;
+                    lastPokedexDataJson = dataJson;
 
                     if (data.length > 0) {
                         pokedexCollection = {};
