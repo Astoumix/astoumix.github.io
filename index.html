@@ -572,6 +572,13 @@
             font-weight: bold;
             font-size: 1.1em;
         }
+        .poke-detail-caught {
+            color: #888;
+            font-size: 0.75em;
+            text-align: center;
+            margin-top: 12px;
+            font-style: italic;
+        }
         .card .card-dex {
             font-size: 0.7em;
             color: #888;
@@ -1093,6 +1100,7 @@
             <div id="poke-detail-types" class="poke-detail-types"></div>
             <div id="poke-detail-desc" class="poke-detail-desc"></div>
             <div id="poke-detail-stats" class="poke-detail-stats"></div>
+            <div id="poke-detail-caught" class="poke-detail-caught"></div>
         </div>
     </div>
     <script>
@@ -1245,6 +1253,14 @@
         // clé négative = shiny), mais indexée par numéro de dex plutôt que
         // par game_id, et alimentée par la table Supabase "pokedex_collections".
         let pokedexCollection = {};
+        // Date/heure de première capture par espèce (même convention de clé
+        // que pokedexCollection : clé négative = shiny). Alimentée par la
+        // colonne Supabase "first_caught_at" (timestamptz, DEFAULT now() sur
+        // les nouvelles lignes uniquement — voir sync.js : le payload envoyé
+        // à l'upsert n'inclut jamais ce champ, donc une recapture de la même
+        // espèce ne l'écrase jamais). Vaut null pour les captures antérieures
+        // à l'ajout de la colonne -> on affiche alors une date de repli fixe.
+        let pokedexCaughtAt = {};
         let currentPokeFilter = "all";
         let pokedexInterval;
         let lastPokedexDataJson = null;
@@ -1274,12 +1290,11 @@
                     lastPokedexDataJson = dataJson;
                     if (data.length > 0) {
                         pokedexCollection = {};
+                        pokedexCaughtAt = {};
                         data.forEach(item => {
-                            if (item.is_shiny) {
-                                pokedexCollection[-item.pokemon_id] = item.quantity;
-                            } else {
-                                pokedexCollection[item.pokemon_id] = item.quantity;
-                            }
+                            const key = item.is_shiny ? -item.pokemon_id : item.pokemon_id;
+                            pokedexCollection[key] = item.quantity;
+                            pokedexCaughtAt[key] = item.first_caught_at || null;
                         });
                     }
                     renderPokedex();
@@ -1370,6 +1385,19 @@
                 return `<span class="poke-type-badge" style="background:${color};">${label}</span>`;
             }).join('');
         }
+        // Pas de date connue (capture antérieure à l'ajout de la colonne
+        // Supabase "first_caught_at") -> repli fixe demandé, sans heure
+        // puisqu'on ne l'a jamais eue.
+        function formatCapturedAt(iso) {
+            if (!iso) return "Capturé le 15/07/26";
+            const d = new Date(iso);
+            const day = String(d.getDate()).padStart(2, "0");
+            const month = String(d.getMonth() + 1).padStart(2, "0");
+            const year = String(d.getFullYear()).slice(-2);
+            const hours = String(d.getHours()).padStart(2, "0");
+            const minutes = String(d.getMinutes()).padStart(2, "0");
+            return `Capturé le ${day}/${month}/${year} à ${hours}:${minutes}`;
+        }
         async function openPokeDetail(dex, shiny) {
             const overlay = document.getElementById("poke-detail-overlay");
             const details = POKEDEX_DETAILS[dex];
@@ -1380,6 +1408,8 @@
             document.getElementById("poke-detail-gen").textContent = `GEN ${getPokedexGeneration(dex)}`;
             document.getElementById("poke-detail-types").innerHTML = "";
             document.getElementById("poke-detail-stats").innerHTML = "";
+            const caughtKey = shiny ? -dex : dex;
+            document.getElementById("poke-detail-caught").textContent = formatCapturedAt(pokedexCaughtAt[caughtKey]);
             const rarityKey = shiny ? "shiny" : getRarityClassPoke(details.rarity);
             document.getElementById("poke-detail-box").style.borderColor = POKE_RARITY_COLORS[rarityKey] || "#f43f5e";
             overlay.style.display = "flex";
