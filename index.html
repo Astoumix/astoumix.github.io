@@ -34,7 +34,6 @@
             letter-spacing: 2px;
             position: relative;
         }
-
         #collection-section header h1, #classement-section header h1 {color: #f43f5e;;top: 28px;text-align: center;}
         #home-section header h1 {color: #f43f5e;position:absolute;top: 28px;width:100%;text-align: center;}
         .pseudo-search {
@@ -156,7 +155,6 @@
             display: block;
             overflow-x: auto;
         }
-
         td img {max-width: 30px;}
         
         .boxes-table thead, .spin-table thead, .poke-rate-table thead {
@@ -528,6 +526,23 @@
             padding: 2px 8px;
             border-radius: 4px;
         }
+        .poke-detail-types {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .poke-type-badge {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            color: #fff;
+            font-size: 0.75em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.35);
+        }
         .poke-detail-desc {
             color: #ddd;
             font-size: 0.9em;
@@ -764,7 +779,6 @@
                 </div>
             </div>
             <div id="openbox">
-
                 <div class="optuto">
                     <h1>La collection de jeux</h1>
                     <p>Vous pouvez dépenser vos pixels pour ouvrir des boîtes et collectionner des jaquettes de jeux indépendants.</br>
@@ -978,7 +992,6 @@
                 <div class="gallery" id="gallery-pokedex"></div>
             </div>
         </section>
-
         <!-- PAGE CLASSEMENT -->
         <section id="classement-section" style="display:none;">
             <header>
@@ -993,14 +1006,12 @@
                     <button type="submit">Voir ma page</button>
                 </form>
             </div>
-
             <div class="collection-tabs">
                 <button id="ctab-btn-gamedex" class="active" data-ctab="gamedex">GameDex</button>
                 <button id="ctab-btn-pokedex" data-ctab="pokedex">Pokédex</button>
                 <button id="ctab-btn-goty" data-ctab="goty">GOTY</button>
                 <button id="ctab-btn-shiny" data-ctab="shiny">Shiny</button>
             </div>
-
             <!-- Classement GameDex : jeux classiques débloqués (hors doublon, hors GOTY) -->
             <div id="view-classement-gamedex" class="classement-view">
                 <div class="rank-table-wrap">
@@ -1016,7 +1027,6 @@
                     </table>
                 </div>
             </div>
-
             <!-- Classement Pokédex : espèces capturées (hors doublon, hors shiny) -->
             <div id="view-classement-pokedex" class="classement-view" style="display:none;">
                 <div class="rank-table-wrap">
@@ -1032,7 +1042,6 @@
                     </table>
                 </div>
             </div>
-
             <!-- Classement GOTY : jeux GOTY débloqués (hors doublon) -->
             <div id="view-classement-goty" class="classement-view" style="display:none;">
                 <div class="rank-table-wrap">
@@ -1048,7 +1057,6 @@
                     </table>
                 </div>
             </div>
-
             <!-- Classement Shiny : Pokémon shiny capturés (hors doublon) -->
             <div id="view-classement-shiny" class="classement-view" style="display:none;">
                 <div class="rank-table-wrap">
@@ -1066,7 +1074,6 @@
             </div>
         </section>
     </div>
-
     <!-- Fenêtre de détail Pokémon (clic sur une case capturée du Pokédex) —
          hors des <section> pour ne pas hériter d'un display:none/overflow
          parent quand on change de page. Contenu (description/poids/taille)
@@ -1083,6 +1090,7 @@
                     <div id="poke-detail-gen" class="poke-detail-gen"></div>
                 </div>
             </div>
+            <div id="poke-detail-types" class="poke-detail-types"></div>
             <div id="poke-detail-desc" class="poke-detail-desc"></div>
             <div id="poke-detail-stats" class="poke-detail-stats"></div>
         </div>
@@ -1152,13 +1160,10 @@
             const username = getUsername();
             document.title = `GameDex - ${username}`;
             document.getElementById("title").textContent = `GameDex - ${username}`;
-
             if (collectionInterval) clearInterval(collectionInterval);
-
             async function fetchCollection() {
                 try {
                     const url = `https://ygqtbfwolcbcaxmldhta.supabase.co/rest/v1/collections?username=eq.${username}&apikey=sb_publishable_3iKEJfCiQEFxF-1UQE586g_ggX6RDqG`;
-
                     const response = await fetch(url);
                     const data = await response.json();
                     // Même correctif que pour le Pokédex : on évite de
@@ -1183,7 +1188,6 @@
                     console.log('Loading collection...');
                 }
             }
-
             await fetchCollection();
             collectionInterval = setInterval(fetchCollection, 2000);
         }
@@ -1323,7 +1327,6 @@
                 return `<div class="card ${cardClass}" onclick="openPokeDetail(${c.dex}, ${c.shiny})"><div class="card-image">${shinyBadge}${quantityDisplay}${genBadge}<img src="${spriteUrl}" data-fallback="${fallbackUrl}" alt="${c.name}" onerror="onPokeSpriteError(this)"></div><div class="card-info"><div class="card-dex">${padDex(c.dex)}</div><div class="card-name">${c.name}</div></div></div>`;
             }).join('');
         }
-
         // ─── Fenêtre de détail Pokémon ───────────────────────────────────────
         // Description officielle (FR), poids et taille récupérés à la demande
         // depuis PokeAPI (pokeapi.co) au clic sur une case capturée — pas de
@@ -1343,25 +1346,47 @@
             legendaire: "#f0a030",
             shiny: "#ffe14d"
         };
+        // Palette officielle des types Pokémon (mêmes teintes que dans les
+        // jeux) + libellés français, indexés par le nom anglais renvoyé par
+        // PokeAPI (pokemon.types[].type.name).
+        const POKE_TYPE_COLORS = {
+            normal: "#A8A878", fire: "#F08030", water: "#6890F0", electric: "#F8D030",
+            grass: "#78C850", ice: "#98D8D8", fighting: "#C03028", poison: "#A040A0",
+            ground: "#E0C068", flying: "#A890F0", psychic: "#F85888", bug: "#A8B820",
+            rock: "#B8A038", ghost: "#705898", dragon: "#7038F8", dark: "#705848",
+            steel: "#B8B8D0", fairy: "#EE99AC"
+        };
+        const POKE_TYPE_LABELS_FR = {
+            normal: "Normal", fire: "Feu", water: "Eau", electric: "Électrik",
+            grass: "Plante", ice: "Glace", fighting: "Combat", poison: "Poison",
+            ground: "Sol", flying: "Vol", psychic: "Psy", bug: "Insecte",
+            rock: "Roche", ghost: "Spectre", dragon: "Dragon", dark: "Ténèbres",
+            steel: "Acier", fairy: "Fée"
+        };
+        function renderPokeTypeBadges(types) {
+            return types.map(t => {
+                const color = POKE_TYPE_COLORS[t] || "#777";
+                const label = POKE_TYPE_LABELS_FR[t] || t;
+                return `<span class="poke-type-badge" style="background:${color};">${label}</span>`;
+            }).join('');
+        }
         async function openPokeDetail(dex, shiny) {
             const overlay = document.getElementById("poke-detail-overlay");
             const details = POKEDEX_DETAILS[dex];
-
             overlay.dataset.currentDex = String(dex);
             document.getElementById("poke-detail-sprite").src = pokedexSpriteFallbackUrl(dex, shiny);
             document.getElementById("poke-detail-dex").textContent = padDex(dex);
             document.getElementById("poke-detail-name").textContent = details.name + (shiny ? " ✨" : "");
             document.getElementById("poke-detail-gen").textContent = `GEN ${getPokedexGeneration(dex)}`;
+            document.getElementById("poke-detail-types").innerHTML = "";
             document.getElementById("poke-detail-stats").innerHTML = "";
             const rarityKey = shiny ? "shiny" : getRarityClassPoke(details.rarity);
             document.getElementById("poke-detail-box").style.borderColor = POKE_RARITY_COLORS[rarityKey] || "#f43f5e";
             overlay.style.display = "flex";
-
             if (pokeDetailCache[dex]) {
                 renderPokeDetail(pokeDetailCache[dex]);
                 return;
             }
-
             document.getElementById("poke-detail-desc").textContent = "Chargement de la description...";
             try {
                 const [speciesRes, pokemonRes] = await Promise.all([
@@ -1371,7 +1396,6 @@
                 if (!speciesRes.ok || !pokemonRes.ok) throw new Error("réponse PokeAPI invalide");
                 const species = await speciesRes.json();
                 const pokemon = await pokemonRes.json();
-
                 // Le texte brut de PokeAPI contient souvent des retours à la
                 // ligne/form-feed en plein milieu d'une phrase (mise en page
                 // du jeu d'origine) -> on les remplace par des espaces.
@@ -1379,14 +1403,13 @@
                 const description = frEntry
                     ? frEntry.flavor_text.replace(/[\n\f\r]+/g, " ")
                     : "Pas de description officielle disponible en français pour ce Pokémon.";
-
                 const data = {
                     description,
                     heightM: (pokemon.height / 10).toFixed(1),
-                    weightKg: (pokemon.weight / 10).toFixed(1)
+                    weightKg: (pokemon.weight / 10).toFixed(1),
+                    types: pokemon.types.map(t => t.type.name)
                 };
                 pokeDetailCache[dex] = data;
-
                 // Ne réaffiche que si la fenêtre est toujours ouverte sur ce
                 // même Pokémon (l'utilisateur a pu la fermer ou cliquer sur un
                 // autre Pokémon pendant le chargement).
@@ -1400,6 +1423,7 @@
             }
         }
         function renderPokeDetail(data) {
+            document.getElementById("poke-detail-types").innerHTML = renderPokeTypeBadges(data.types || []);
             document.getElementById("poke-detail-desc").textContent = data.description;
             document.getElementById("poke-detail-stats").innerHTML =
                 `<div class="poke-detail-stat"><div class="poke-detail-stat-label">Taille</div><div class="poke-detail-stat-value">${data.heightM} m</div></div>`
