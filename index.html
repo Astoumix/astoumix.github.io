@@ -160,6 +160,7 @@
             background: #1a1a1a;
             border-bottom: 2px solid #f43f5e;
         }
+        td img {max-width: 30px;}
         .boxes-table th, .spin-table th, .poke-rate-table th {
             padding: 15px;
             text-align: center;
@@ -443,6 +444,117 @@
             filter: drop-shadow(0 0 3px #000);
             z-index: 2;
         }
+        .card .card-gen {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(0, 0, 0, 0.6);
+            color: #ccc;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            padding: 3px 6px;
+            border-radius: 4px;
+            z-index: 2;
+        }
+        /* ─── Fenêtre de détail Pokémon ────────────────────────────────────── */
+        .poke-detail-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        .poke-detail-box {
+            position: relative;
+            background: #1a1a1a;
+            border: 2px solid #f43f5e;
+            border-radius: 10px;
+            padding: 24px;
+            width: 100%;
+            max-width: 420px;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .poke-detail-close {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 24px;
+            line-height: 1;
+            cursor: pointer;
+            padding: 4px;
+        }
+        .poke-detail-close:hover { color: #f43f5e; }
+        .poke-detail-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .poke-detail-sprite {
+            width: 96px;
+            height: 96px;
+            object-fit: contain;
+            background: #111;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+        .poke-detail-dex {
+            color: #888;
+            font-size: 0.85em;
+        }
+        .poke-detail-name {
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.2em;
+            text-transform: uppercase;
+        }
+        .poke-detail-gen {
+            display: inline-block;
+            margin-top: 4px;
+            background: rgba(244, 63, 94, 0.15);
+            color: #f43f5e;
+            font-size: 0.75em;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .poke-detail-desc {
+            color: #ddd;
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-bottom: 16px;
+            min-height: 40px;
+        }
+        .poke-detail-stats {
+            display: flex;
+            gap: 20px;
+            border-top: 1px solid #333;
+            padding-top: 14px;
+        }
+        .poke-detail-stat {
+            flex: 1;
+            text-align: center;
+        }
+        .poke-detail-stat-label {
+            color: #888;
+            font-size: 0.7em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .poke-detail-stat-value {
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
         .card .card-dex {
             font-size: 0.7em;
             color: #888;
@@ -598,50 +710,50 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>astoumiLove</td>
+                                <td><img src="https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_34d33170b1834977af0d59e9c7b725f2/default/dark/3.0" alt="astoumiLove"></td>
                                 <td>Mise x2</td>
                                 <td>Mise x5</td>
                                 <td>Mise x100</td>
                             </tr>
                             <tr>
-                                <td>astoumiStun</td>
+                                <td><img src="https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_ee497b2adc914cb5a77e84b7e484fd2b/default/dark/3.0" alt="astoumiStun"></td>
                                 <td>Mise x1.6</td>
                                 <td>Mise x4.5</td>
                                 <td>Mise x100</td>
                             </tr>
                             <tr>
-                                <td>astoumiWTF</td>
+                                <td><img src="https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_0e9e876211a746da9f28f201fa3fb67a/default/dark/3.0" alt="astoumiWTF"></td>
                                 <td>Mise x1.4</td>
                                 <td>Mise x4</td>
                                 <td>Mise x100</td>
                             </tr>
                             <tr>
-                                <td>OhMyDog</td>
-                                <td>Mise x0</td>
+                                <td><img src="https://static-cdn.jtvnw.net/emoticons/v2/81103/default/dark/3.0" alt="OhMyDog"></td>
+                                <td>Mise x0.5</td>
                                 <td>Mise x3.5</td>
                                 <td>Mise x80</td>
                             </tr>
                             <tr>
-                                <td>PogChamp</td>
-                                <td>Mise x0</td>
+                                <td><img src="https://static-cdn.jtvnw.net/emoticons/v2/305954156/default/dark/3.0" alt="PogChamp"></td>
+                                <td>Mise x0.5</td>
                                 <td>Mise x3</td>
                                 <td>Mise x70</td>
                             </tr>
                             <tr>
-                                <td>SabaPing</td>
-                                <td>Mise x0</td>
+                                <td><img src="https://static-cdn.jtvnw.net/emoticons/v2/160402/default/dark/3.0" alt="SabaPing"></td>
+                                <td>Mise x0.5</td>
                                 <td>Mise x2.5</td>
                                 <td>Mise x60</td>
                             </tr>
                             <tr>
-                                <td>Kappa</td>
-                                <td>Mise x0</td>
+                                <td><img src="https://static-cdn.jtvnw.net/emoticons/v2/25/default/dark/3.0" alt="Kappa"></td>
+                                <td>Mise x0.5</td>
                                 <td>Mise x2</td>
                                 <td>Mise x50</td>
                             </tr>
                             <tr>
-                                <td>BabyRage</td>
-                                <td>Mise x0</td>
+                                <td><img src="https://static-cdn.jtvnw.net/emoticons/v2/22639/default/dark/3.0" alt="BabyRage"></td>
+                                <td>Mise x0.5</td>
                                 <td>Mise x1.5</td>
                                 <td>Mise x40</td>
                             </tr>
@@ -952,6 +1064,27 @@
             </div>
         </section>
     </div>
+
+    <!-- Fenêtre de détail Pokémon (clic sur une case capturée du Pokédex) —
+         hors des <section> pour ne pas hériter d'un display:none/overflow
+         parent quand on change de page. Contenu (description/poids/taille)
+         chargé à la demande depuis PokeAPI, mis en cache en mémoire pour ne
+         pas re-télécharger deux fois le même Pokémon dans la session. -->
+    <div id="poke-detail-overlay" class="poke-detail-overlay" style="display:none;" onclick="if (event.target === this) closePokeDetail();">
+        <div class="poke-detail-box">
+            <button type="button" class="poke-detail-close" onclick="closePokeDetail()">×</button>
+            <div class="poke-detail-header">
+                <img id="poke-detail-sprite" class="poke-detail-sprite" src="" alt="">
+                <div>
+                    <div id="poke-detail-dex" class="poke-detail-dex"></div>
+                    <div id="poke-detail-name" class="poke-detail-name"></div>
+                    <div id="poke-detail-gen" class="poke-detail-gen"></div>
+                </div>
+            </div>
+            <div id="poke-detail-desc" class="poke-detail-desc"></div>
+            <div id="poke-detail-stats" class="poke-detail-stats"></div>
+        </div>
+    </div>
     <script>
         const GAME_DETAILS = {
             1:{name:"The Binding of Isaac: Rebirth",year:2014,rarity:"Légendaire"},2:{name:"RimWorld",year:2018,rarity:"Rare"},3:{name:"Samorost 3",year:2016,rarity:"Commun"},4:{name:"Super Meat Boy",year:2010,rarity:"Légendaire"},5:{name:"Machinarium",year:2009,rarity:"Commun"},6:{name:"Inside",year:2016,rarity:"Rare"},7:{name:"Outer Wilds",year:2019,rarity:"Légendaire"},8:{name:"Satisfactory",year:2024,rarity:"Rare"},9:{name:"Undertale",year:2015,rarity:"Rare"},10:{name:"Hades",year:2020,rarity:"Légendaire"},11:{name:"Kenshi",year:2018,rarity:"Peu commun"},12:{name:"Yuppie Psycho",year:2019,rarity:"Commun"},13:{name:"Beat Saber",year:2018,rarity:"Peu commun"},14:{name:"Chants of Sennaar",year:2023,rarity:"Commun"},15:{name:"To the Moon",year:2011,rarity:"Peu commun"},16:{name:"Botanicula",year:2012,rarity:"Peu commun"},17:{name:"Mark of the Ninja",year:2012,rarity:"Peu commun"},18:{name:"Rogue Legacy",year:2013,rarity:"Commun"},19:{name:"FEZ",year:2012,rarity:"Epique"},20:{name:"Valheim",year:2026,rarity:"Epique"},21:{name:"Redout",year:2016,rarity:"Commun"},22:{name:"FTL: Faster Than Light",year:2012,rarity:"Rare"},23:{name:"Norco",year:2022,rarity:"Peu commun"},24:{name:"Signalis",year:2022,rarity:"Peu commun"},25:{name:"Stardew Valley",year:2016,rarity:"Epique"},26:{name:"The End is Nigh",year:2017,rarity:"Peu commun"},27:{name:"Nother Journey",year:2021,rarity:"Commun"},28:{name:"Against the Storm",year:2023,rarity:"Commun"},29:{name:"Risk of Rain",year:2013,rarity:"Rare"},30:{name:"Banished",year:2014,rarity:"Commun"},31:{name:"FAR: Changing Tides",year:2022,rarity:"Rare"},32:{name:"Redout II",year:2022,rarity:"Commun"},33:{name:"Salt and Sanctuary",year:2016,rarity:"Commun"},34:{name:"Keep Talking and Nobody Explodes",year:2015,rarity:"Rare"},35:{name:"Hollow Knight",year:2017,rarity:"Légendaire"},36:{name:"TowerFall Ascension",year:2014,rarity:"Peu commun"},37:{name:"Endless Legend",year:2014,rarity:"Commun"},38:{name:"A Hat in Time",year:2017,rarity:"Peu commun"},39:{name:"Dusk",year:2018,rarity:"Commun"},40:{name:"Return of the Obra Dinn",year:2018,rarity:"Rare"},41:{name:"ZERO Sievert",year:2024,rarity:"Commun"},42:{name:"Pyre",year:2017,rarity:"Rare"},43:{name:"Undermine",year:2020,rarity:"Commun"},44:{name:"The Stanley Parable",year:2013,rarity:"Epique"},45:{name:"Brothers: A Tale of Two Sons",year:2013,rarity:"Rare"},46:{name:"Pseudoregalia",year:2023,rarity:"Commun"},47:{name:"Bastion",year:2011,rarity:"Rare"},48:{name:"Battleblock Theater",year:2014,rarity:"Rare"},49:{name:"into The Radius",year:2020,rarity:"Commun"},50:{name:"Broforce",year:2015,rarity:"Peu commun"},51:{name:"Dungeon of the Endless",year:2014,rarity:"Peu commun"},52:{name:"Ori and the Blind Forest",year:2015,rarity:"Epique"},53:{name:"The Legend of Bum-Bo",year:2019,rarity:"Commun"},54:{name:"Amnesia: The Dark Descent",year:2010,rarity:"Epique"},55:{name:"Warhammer: Vermintide 2",year:2018,rarity:"Rare"},56:{name:"Celeste",year:2018,rarity:"Légendaire"},57:{name:"Doki Doki Literature Club!",year:2017,rarity:"Peu commun"},58:{name:"Terraria",year:2011,rarity:"Epique"},59:{name:"Per Aspera",year:2020,rarity:"Commun"},60:{name:"Dwarf Fortress",year:2022,rarity:"Peu commun"},61:{name:"Risk of Rain 2",year:2020,rarity:"Epique"},62:{name:"Guacamelee! 2",year:2018,rarity:"Rare"},63:{name:"Streets of Rogue",year:2019,rarity:"Peu commun"},64:{name:"Creeper World 3: Arc Eternal",year:2014,rarity:"Commun"},65:{name:"Chuchel",year:2018,rarity:"Commun"},66:{name:"Runner 2: Future Legend of Rhythm Alien",year:2013,rarity:"Rare"},67:{name:"Samurai Gunn",year:2013,rarity:"Commun"},68:{name:"Timberborn",year:2026,rarity:"Commun"},69:{name:"Blade and Sorcery",year:2018,rarity:"Commun"},70:{name:"Shovel Knight",year:2014,rarity:"Rare"},71:{name:"Phasmophobia",year:2024,rarity:"Rare"},72:{name:"Super Hexagon",year:2012,rarity:"Rare"},73:{name:"Streets of Rage 4",year:2020,rarity:"Peu commun"},74:{name:"Horizon Chase Turbo",year:2018,rarity:"Commun"},75:{name:"They Are Billions",year:2019,rarity:"Rare"},76:{name:"The Swapper",year:2013,rarity:"Commun"},77:{name:"Supraland",year:2019,rarity:"Rare"},78:{name:"Tales From Space: Mutant Blobs Attack",year:2012,rarity:"Commun"},79:{name:"Thumper",year:2016,rarity:"Commun"},80:{name:"Darkest Dungeon",year:2016,rarity:"Peu commun"},81:{name:"Carrion",year:2020,rarity:"Peu commun"},82:{name:"Dead Cells",year:2018,rarity:"Epique"},83:{name:"Walkabout Mini Golf",year:2020,rarity:"Commun"},84:{name:"Chroma Squad",year:2015,rarity:"Commun"},85:{name:"Lethal League",year:2014,rarity:"Peu commun"},86:{name:"FAR: Lone Sails",year:2018,rarity:"Peu commun"},87:{name:"Frostpunk",year:2018,rarity:"Rare"},88:{name:"Teardown",year:2022,rarity:"Rare"},89:{name:"Divinity: Original Sin - Enhanced Edition",year:2015,rarity:"Rare"},90:{name:"Owlboy",year:2016,rarity:"Commun"},91:{name:"A Story About My Uncle",year:2014,rarity:"Peu commun"},92:{name:"Kingdom: New Lands",year:2016,rarity:"Peu commun"},93:{name:"Baba Is You",year:2019,rarity:"Peu commun"},94:{name:"Katana Zero",year:2019,rarity:"Commun"},95:{name:"Minit",year:2018,rarity:"Commun"},96:{name:"ClusterTruck",year:2016,rarity:"Peu commun"},97:{name:"The Witness",year:2016,rarity:"Légendaire"},98:{name:"Sludge Life",year:2020,rarity:"Commun"},99:{name:"Superhot",year:2016,rarity:"Epique"},100:{name:"Starbound",year:2016,rarity:"Rare"},101:{name:"SteamWorld Heist",year:2015,rarity:"Peu commun"},102:{name:"SteamWorld Dig 2",year:2017,rarity:"Peu commun"},103:{name:"GRIS",year:2018,rarity:"Rare"},104:{name:"One Finger Death Punch",year:2013,rarity:"Commun"},105:{name:"The Messenger",year:2018,rarity:"Commun"},106:{name:"Gato Roboto",year:2019,rarity:"Commun"},107:{name:"Beat Hazard",year:2010,rarity:"Rare"},108:{name:"Kingdom Rush Frontiers",year:2013,rarity:"Commun"},109:{name:"Prison Architect",year:2015,rarity:"Rare"},110:{name:"Bleed",year:2012,rarity:"Peu commun"},111:{name:"Hotline Miami",year:2012,rarity:"Légendaire"},112:{name:"Cliff Empire",year:2018,rarity:"Commun"},113:{name:"Blasphemous",year:2019,rarity:"Rare"},114:{name:"Hexcells Infinite",year:2014,rarity:"Commun"},115:{name:"Downwell",year:2015,rarity:"Commun"},116:{name:"Pilgrims",year:2019,rarity:"Peu commun"},117:{name:"Death Must Die",year:2023,rarity:"Commun"},118:{name:"Shantae and the Seven Sirens",year:2020,rarity:"Peu commun"},119:{name:"Jazzpunk",year:2014,rarity:"Commun"},120:{name:"Runestone Keeper",year:2015,rarity:"Commun"},121:{name:"A Short Hike",year:2019,rarity:"Commun"},122:{name:"Mount & Blade: Warband",year:2010,rarity:"Peu commun"},123:{name:"Luftrausers",year:2014,rarity:"Commun"},124:{name:"Reassembly",year:2015,rarity:"Commun"},125:{name:"Limbo",year:2010,rarity:"Rare"},126:{name:"Heave Ho",year:2019,rarity:"Peu commun"},127:{name:"Braid",year:2008,rarity:"Peu commun"},128:{name:"Papers, Please",year:2013,rarity:"Epique"},129:{name:"Treasure Adventure Game",year:2011,rarity:"Commun"},130:{name:"Soldat",year:2002,rarity:"Commun"},131:{name:"UnMetal",year:2021,rarity:"Commun"},132:{name:"Nidhogg",year:2014,rarity:"Peu commun"},133:{name:"Frogatto & Friends",year:2010,rarity:"Commun"},134:{name:"Cursed Castilla",year:2016,rarity:"Commun"},135:{name:"Super Hydorah",year:2016,rarity:"Commun"},136:{name:"Super TIME Force Ultra",year:2014,rarity:"Commun"},137:{name:"Overcooked",year:2016,rarity:"Peu commun"},138:{name:"Brotato",year:2013,rarity:"Epique"},139:{name:"Vampire Survivors",year:2022,rarity:"Rare"},140:{name:"Pony Island",year:2016,rarity:"Rare"},141:{name:"Noita",year:2020,rarity:"Peu commun"},142:{name:"Dust: An Elysian Tail",year:2012,rarity:"Peu commun"},143:{name:"Black Skylands",year:2023,rarity:"Commun"},144:{name:"Audiosurf",year:2008,rarity:"Peu commun"},145:{name:"Subnautica",year:2018,rarity:"Epique"},146:{name:"My Time at Portia",year:2019,rarity:"Peu commun"},147:{name:"Transistor",year:2014,rarity:"Epique"},148:{name:"Kingdom: Two Crowns",year:2018,rarity:"Peu commun"},149:{name:"Wargroove",year:2019,rarity:"Commun"},150:{name:"Nuclear Throne",year:2015,rarity:"Peu commun"},151:{name:"Everhood",year:2021,rarity:"Commun"},152:{name:"Airships: Conquer the Skies",year:2018,rarity:"Commun"},153:{name:"Enter the Gungeon",year:2016,rarity:"Epique"},154:{name:"Hidden Folks",year:2017,rarity:"Commun"},155:{name:"This War of Mine",year:2014,rarity:"Epique"},156:{name:"WorldBox",year:2021,rarity:"Peu commun"},157:{name:"The Henry Stickmin Collection",year:2020,rarity:"Commun"},158:{name:"Airborne Kingdom",year:2020,rarity:"Commun"},159:{name:"20 Minutes Till Dawn",year:2023,rarity:"Peu commun"}
@@ -966,6 +1099,20 @@
         const POKEDEX_SPRITE_BASE = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown";
         const POKEDEX_SPRITE_FALLBACK_BASE = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork";
         const POKEDEX_TOTAL = 1025;
+        // Bornes officielles (dex national) de chaque génération, pour
+        // afficher un badge "GEN X" sur les cases capturées sans avoir à
+        // stocker cette info pour chacune des 1025 entrées de POKEDEX_DETAILS.
+        const POKEDEX_GENERATIONS = [
+            [1, 151, 1], [152, 251, 2], [252, 386, 3], [387, 493, 4],
+            [494, 649, 5], [650, 721, 6], [722, 809, 7], [810, 905, 8],
+            [906, 1025, 9]
+        ];
+        function getPokedexGeneration(dex) {
+            for (const [min, max, gen] of POKEDEX_GENERATIONS) {
+                if (dex >= min && dex <= max) return gen;
+            }
+            return "?";
+        }
         function pokedexSpriteUrl(dex, shiny) {
             return `${POKEDEX_SPRITE_BASE}/${shiny ? "shiny/" : ""}${dex}.gif`;
         }
@@ -1170,9 +1317,85 @@
                 const fallbackUrl = pokedexSpriteFallbackUrl(c.dex, c.shiny);
                 const quantityDisplay = c.qty >= 2 ? `<div class="card-quantity">x${c.qty}</div>` : '';
                 const shinyBadge = c.shiny ? '<div class="shiny-badge">⭐</div>' : '';
-                return `<div class="card ${cardClass}"><div class="card-image">${shinyBadge}${quantityDisplay}<img src="${spriteUrl}" data-fallback="${fallbackUrl}" alt="${c.name}" onerror="onPokeSpriteError(this)"></div><div class="card-info"><div class="card-dex">${padDex(c.dex)}</div><div class="card-name">${c.name}</div></div></div>`;
+                const genBadge = `<div class="card-gen">GEN ${getPokedexGeneration(c.dex)}</div>`;
+                return `<div class="card ${cardClass}" onclick="openPokeDetail(${c.dex}, ${c.shiny})"><div class="card-image">${shinyBadge}${quantityDisplay}${genBadge}<img src="${spriteUrl}" data-fallback="${fallbackUrl}" alt="${c.name}" onerror="onPokeSpriteError(this)"></div><div class="card-info"><div class="card-dex">${padDex(c.dex)}</div><div class="card-name">${c.name}</div></div></div>`;
             }).join('');
         }
+
+        // ─── Fenêtre de détail Pokémon ───────────────────────────────────────
+        // Description officielle (FR), poids et taille récupérés à la demande
+        // depuis PokeAPI (pokeapi.co) au clic sur une case capturée — pas de
+        // pré-chargement pour les 1025 espèces, uniquement celle consultée.
+        // Résultat mis en cache en mémoire (pokeDetailCache) pour ne pas
+        // retélécharger deux fois le même Pokémon pendant la session, comme
+        // demandé par la politique d'usage raisonnable de PokeAPI.
+        const pokeDetailCache = {};
+        async function openPokeDetail(dex, shiny) {
+            const overlay = document.getElementById("poke-detail-overlay");
+            const details = POKEDEX_DETAILS[dex];
+
+            overlay.dataset.currentDex = String(dex);
+            document.getElementById("poke-detail-sprite").src = pokedexSpriteFallbackUrl(dex, shiny);
+            document.getElementById("poke-detail-dex").textContent = padDex(dex);
+            document.getElementById("poke-detail-name").textContent = details.name + (shiny ? " ✨" : "");
+            document.getElementById("poke-detail-gen").textContent = `GEN ${getPokedexGeneration(dex)}`;
+            document.getElementById("poke-detail-stats").innerHTML = "";
+            overlay.style.display = "flex";
+
+            if (pokeDetailCache[dex]) {
+                renderPokeDetail(pokeDetailCache[dex]);
+                return;
+            }
+
+            document.getElementById("poke-detail-desc").textContent = "Chargement de la description...";
+            try {
+                const [speciesRes, pokemonRes] = await Promise.all([
+                    fetch(`https://pokeapi.co/api/v2/pokemon-species/${dex}`),
+                    fetch(`https://pokeapi.co/api/v2/pokemon/${dex}`)
+                ]);
+                if (!speciesRes.ok || !pokemonRes.ok) throw new Error("réponse PokeAPI invalide");
+                const species = await speciesRes.json();
+                const pokemon = await pokemonRes.json();
+
+                // Le texte brut de PokeAPI contient souvent des retours à la
+                // ligne/form-feed en plein milieu d'une phrase (mise en page
+                // du jeu d'origine) -> on les remplace par des espaces.
+                const frEntry = species.flavor_text_entries.find(e => e.language.name === "fr");
+                const description = frEntry
+                    ? frEntry.flavor_text.replace(/[\n\f\r]+/g, " ")
+                    : "Pas de description officielle disponible en français pour ce Pokémon.";
+
+                const data = {
+                    description,
+                    heightM: (pokemon.height / 10).toFixed(1),
+                    weightKg: (pokemon.weight / 10).toFixed(1)
+                };
+                pokeDetailCache[dex] = data;
+
+                // Ne réaffiche que si la fenêtre est toujours ouverte sur ce
+                // même Pokémon (l'utilisateur a pu la fermer ou cliquer sur un
+                // autre Pokémon pendant le chargement).
+                if (overlay.style.display !== "none" && overlay.dataset.currentDex === String(dex)) {
+                    renderPokeDetail(data);
+                }
+            } catch (error) {
+                if (overlay.dataset.currentDex === String(dex)) {
+                    document.getElementById("poke-detail-desc").textContent = "Impossible de récupérer les informations pour le moment.";
+                }
+            }
+        }
+        function renderPokeDetail(data) {
+            document.getElementById("poke-detail-desc").textContent = data.description;
+            document.getElementById("poke-detail-stats").innerHTML =
+                `<div class="poke-detail-stat"><div class="poke-detail-stat-label">Taille</div><div class="poke-detail-stat-value">${data.heightM} m</div></div>`
+                + `<div class="poke-detail-stat"><div class="poke-detail-stat-label">Poids</div><div class="poke-detail-stat-value">${data.weightKg} kg</div></div>`;
+        }
+        function closePokeDetail() {
+            document.getElementById("poke-detail-overlay").style.display = "none";
+        }
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") closePokeDetail();
+        });
         // ─── Classement ──────────────────────────────────────────────────────
         // Accessible via le hash réservé "#classement" (voir initPage). Lit les
         // 2 mêmes tables Supabase que les pages perso (collections /
