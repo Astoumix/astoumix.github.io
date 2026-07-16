@@ -502,7 +502,6 @@
             width: 60%;
             height: 60%;
             object-fit: contain;
-            background: #111;
             border-radius: 8px;
             flex-shrink: 0;
         }
@@ -603,9 +602,8 @@
             margin-bottom: 16px;
         }
         .game-detail-cover {
-            width: 40%;
+            width: 60%;
             object-fit: contain;
-            background: #111;
             border-radius: 8px;
             flex-shrink: 0;
         }
@@ -1019,6 +1017,19 @@
                     <p class="goty-desc">Un shiny peut être n'importe quel Pokémon, peu importe sa rareté normale !</p>
                 </div>
             </div>
+            <div id="fish">
+                <div class="fishtuto">
+                    <h1>La pêche</h1>
+                    <p>Vous pouvez dépenser vos points de chaîne pour pêcher.</br>
+                    Le but est simplement de pêcher collectivement pour débloquer tous les objets du "fishdex".</br>
+                    Un objet "spécial" vous permet de remporter un jeu tiré aléatoirement.</br>
+                    Ce système est voué à disparaître pour laisser la place au pokespin !</p>
+                    </br>
+                    <h2>Les commandes</h2>
+                    <p>!fishlb - Voir le classement</p>
+                    <p>!fishdex - Voir la liste de tous les objets</p>
+                </div>
+            </div>
         </section>
         <!-- PAGE COLLECTION -->
         <section id="collection-section">
@@ -1061,6 +1072,7 @@
                             <button data-sort="name" class="active">Nom<span class="sort-arrow"></span></button>
                             <button data-sort="year">Année<span class="sort-arrow"></span></button>
                             <button data-sort="rarity">Rareté<span class="sort-arrow"></span></button>
+                            <button data-sort="metacritic">Metacritic<span class="sort-arrow"></span></button>
                         </div>
                     </div>
                 </div>
@@ -1354,6 +1366,16 @@
             if (currentSort === "name") games.sort((a, b) => currentSortDirection * a.name.localeCompare(b.name));
             if (currentSort === "year") games.sort((a, b) => currentSortDirection * (b.year - a.year));
             if (currentSort === "rarity") games.sort((a, b) => currentSortDirection * (RARITY_ORDER[b.rarity] - RARITY_ORDER[a.rarity]));
+            if (currentSort === "metacritic") games.sort((a, b) => {
+                // Un jeu sans note Metacritic est toujours relégué en fin de
+                // liste, peu importe le sens du tri (croissant ou décroissant)
+                // - une note absente n'est pas une "mauvaise note".
+                const scoreA = GAME_STEAM_DETAILS[a.id] ? GAME_STEAM_DETAILS[a.id].metacritic : null;
+                const scoreB = GAME_STEAM_DETAILS[b.id] ? GAME_STEAM_DETAILS[b.id].metacritic : null;
+                if (scoreA === null || scoreA === undefined) return 1;
+                if (scoreB === null || scoreB === undefined) return -1;
+                return currentSortDirection * (scoreB - scoreA);
+            });
             gallery.innerHTML = games.length === 0
                 ? '<div class="empty">Aucun jeu dans cette collection pour l\'instant</div>'
                 : games.map(g => {
