@@ -156,11 +156,13 @@
             display: block;
             overflow-x: auto;
         }
+
+        td img {max-width: 30px;}
+        
         .boxes-table thead, .spin-table thead, .poke-rate-table thead {
             background: #1a1a1a;
             border-bottom: 2px solid #f43f5e;
         }
-        td img {max-width: 30px;}
         .boxes-table th, .spin-table th, .poke-rate-table th {
             padding: 15px;
             text-align: center;
@@ -475,7 +477,7 @@
             border-radius: 10px;
             padding: 24px;
             width: 100%;
-            max-width: 420px;
+            max-width: 580px;
             max-height: 85vh;
             overflow-y: auto;
         }
@@ -499,8 +501,8 @@
             margin-bottom: 16px;
         }
         .poke-detail-sprite {
-            width: 96px;
-            height: 96px;
+            width: 60%;
+            height: 60%;
             object-fit: contain;
             background: #111;
             border-radius: 8px;
@@ -1071,7 +1073,7 @@
          chargé à la demande depuis PokeAPI, mis en cache en mémoire pour ne
          pas re-télécharger deux fois le même Pokémon dans la session. -->
     <div id="poke-detail-overlay" class="poke-detail-overlay" style="display:none;" onclick="if (event.target === this) closePokeDetail();">
-        <div class="poke-detail-box">
+        <div id="poke-detail-box" class="poke-detail-box">
             <button type="button" class="poke-detail-close" onclick="closePokeDetail()">×</button>
             <div class="poke-detail-header">
                 <img id="poke-detail-sprite" class="poke-detail-sprite" src="" alt="">
@@ -1330,6 +1332,17 @@
         // retélécharger deux fois le même Pokémon pendant la session, comme
         // demandé par la politique d'usage raisonnable de PokeAPI.
         const pokeDetailCache = {};
+        // Mêmes couleurs que les bordures des cases .card.poke-* (voir plus
+        // haut) — la clé "shiny" prend le pas sur la rareté quand shiny=true,
+        // exactement comme pour les cases de la galerie.
+        const POKE_RARITY_COLORS = {
+            commun: "#9aa79a",
+            peucommun: "#4fbf4f",
+            rare: "#5ab0e0",
+            epique: "#b57de8",
+            legendaire: "#f0a030",
+            shiny: "#ffe14d"
+        };
         async function openPokeDetail(dex, shiny) {
             const overlay = document.getElementById("poke-detail-overlay");
             const details = POKEDEX_DETAILS[dex];
@@ -1340,6 +1353,8 @@
             document.getElementById("poke-detail-name").textContent = details.name + (shiny ? " ✨" : "");
             document.getElementById("poke-detail-gen").textContent = `GEN ${getPokedexGeneration(dex)}`;
             document.getElementById("poke-detail-stats").innerHTML = "";
+            const rarityKey = shiny ? "shiny" : getRarityClassPoke(details.rarity);
+            document.getElementById("poke-detail-box").style.borderColor = POKE_RARITY_COLORS[rarityKey] || "#f43f5e";
             overlay.style.display = "flex";
 
             if (pokeDetailCache[dex]) {
