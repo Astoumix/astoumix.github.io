@@ -258,6 +258,7 @@
             transition: background 0.2s;
         }
         .rank-table tbody tr:hover { background: #333; }
+        .rank-table tbody tr.rank-row { cursor: pointer; }
         .rank-table tbody tr:last-child { border-bottom: none; }
         .rank-table th:nth-child(1), .rank-table td:nth-child(1) { width: 18%; }
         .rank-table th:nth-child(2), .rank-table td:nth-child(2) { width: 47%; }
@@ -768,7 +769,6 @@
                 left: inherit;
                 top: 50px;
                 justify-content: center;
-
             }
             #home-section .header-buttons {top:80px;}
             .btn-menu {
