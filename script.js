@@ -701,6 +701,9 @@ const GAME_DETAILS = {
             }
             return count;
         }
+        // Accord singulier/pluriel pour les descriptions dont le premier
+        // palier vaut 1 (ex: "1 jeu Épique unique" vs "5 jeux Épiques uniques").
+        function succesPluralS(n) { return n > 1 ? "s" : ""; }
         const ACHIEVEMENTS = [
             // ─ Pokédex : captures ─
             { id: "poke-premierpas", category: "pokedex", icon: "🎯", name: "Premier Pas",
@@ -713,11 +716,11 @@ const GAME_DETAILS = {
             ...GENERATION_ACHIEVEMENTS,
             // ─ Pokédex : rareté ─
             { id: "poke-rare", category: "pokedex", icon: "🔷", name: "Collectionneur Rare",
-              desc: (n) => `Capturer ${n} Pokémon Rares uniques (sur 292).`, tiers: [1, 50, 150, 292], compute: () => succesRarityOwnedCount("Rare") },
+              desc: (n) => `Capturer ${n} Pokémon Rare${succesPluralS(n)} unique${succesPluralS(n)} (sur 292).`, tiers: [1, 50, 150, 292], compute: () => succesRarityOwnedCount("Rare") },
             { id: "poke-epique", category: "pokedex", icon: "🟣", name: "Collectionneur Épique",
-              desc: (n) => `Capturer ${n} Pokémon Épiques uniques (sur 176).`, tiers: [10, 50, 100, 176], compute: () => succesRarityOwnedCount("Epique") },
+              desc: (n) => `Capturer ${n} Pokémon Épique${succesPluralS(n)} unique${succesPluralS(n)} (sur 176).`, tiers: [1, 50, 100, 176], compute: () => succesRarityOwnedCount("Epique") },
             { id: "poke-legendaire", category: "pokedex", icon: "👑", name: "Collectionneur Légendaire",
-              desc: (n) => `Capturer ${n} Pokémon Légendaires uniques (sur 117).`, tiers: [1, 25, 60, 117], compute: () => succesRarityOwnedCount("Legendaire") },
+              desc: (n) => `Capturer ${n} Pokémon Légendaire${succesPluralS(n)} unique${succesPluralS(n)} (sur 117).`, tiers: [1, 25, 60, 117], compute: () => succesRarityOwnedCount("Legendaire") },
             // ─ Pokédex : shiny ─
             { id: "poke-premiershiny", category: "pokedex", icon: "✨", name: "Premier Éclat",
               desc: "Capturer un premier Pokémon shiny.", tiers: [1], compute: succesUniqueShinyCaughtCount },
@@ -730,10 +733,12 @@ const GAME_DETAILS = {
               desc: "Posséder un premier jeu en édition GOTY.", tiers: [1], compute: succesGotyOwnedCount },
             { id: "game-palmares", category: "gamedex", icon: "🥇", name: "Palmarès GOTY",
               desc: (n) => `Posséder ${n} jeux en édition GOTY.`, tiers: [5, 20, 50], compute: succesGotyOwnedCount },
-            { id: "game-epique", category: "gamedex", icon: "🟣", name: "Rareté Épique",
-              desc: "Posséder un jeu de rareté Épique.", tiers: [1], compute: () => succesGameRarityOwnedCount("Epique") },
-            { id: "game-legendaire", category: "gamedex", icon: "🟡", name: "Rareté Légendaire",
-              desc: "Posséder un jeu de rareté Légendaire.", tiers: [1], compute: () => succesGameRarityOwnedCount("Légendaire") },
+            { id: "game-rare", category: "gamedex", icon: "🔷", name: "Collectionneur Rare",
+              desc: (n) => `Posséder ${n} jeu${succesPluralS(n)} Rare${succesPluralS(n)} unique${succesPluralS(n)} (sur 32).`, tiers: [1, 10, 20, 32], compute: () => succesGameRarityOwnedCount("Rare") },
+            { id: "game-epique", category: "gamedex", icon: "🟣", name: "Collectionneur Épique",
+              desc: (n) => `Posséder ${n} jeu${succesPluralS(n)} Épique${succesPluralS(n)} unique${succesPluralS(n)} (sur 16).`, tiers: [1, 5, 10, 16], compute: () => succesGameRarityOwnedCount("Epique") },
+            { id: "game-legendaire", category: "gamedex", icon: "👑", name: "Collectionneur Légendaire",
+              desc: (n) => `Posséder ${n} jeu${succesPluralS(n)} Légendaire${succesPluralS(n)} unique${succesPluralS(n)} (sur 8).`, tiers: [1, 3, 6, 8], compute: () => succesGameRarityOwnedCount("Légendaire") },
             // ─ Transversal ─
             { id: "global-doublecasquette", category: "global", icon: "🎭", name: "Double Casquette",
               desc: "Posséder au moins 1 jeu et 1 Pokémon.", tiers: [1],
