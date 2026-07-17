@@ -111,6 +111,7 @@
             display: flex;
             gap: 10px;
             align-items: center;
+            overflow-x: auto;
         }
         label {
             font-weight: bold;
