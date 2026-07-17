@@ -1,0 +1,783 @@
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #111;
+            color: #ffffff;
+            font-family: 'Electrolize', sans-serif;
+        }
+        .container {
+            width: 100%;
+            margin: 0 auto;
+        }
+        #home-section header, #collection-section header, #classement-section header {
+            text-align: left;
+            position: relative;
+            width: 100%;
+            height: 75px;
+            background: #111;
+            border-bottom: 1px solid #222;
+        }
+        h1 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+            letter-spacing: 2px;
+            position: relative;
+        }
+        #collection-section header h1, #classement-section header h1 {color: #f43f5e;;top: 28px;text-align: center;}
+        #home-section header h1 {color: #f43f5e;position:absolute;top: 28px;width:100%;text-align: center;}
+        .pseudo-search {
+            display: flex;
+            justify-content: center;
+            padding: 24px 20px 0;
+        }
+        .pseudo-search form {
+            display: flex;
+            gap: 8px;
+        }
+        .pseudo-search input {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 9px 14px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.95em;
+            width: 220px;
+        }
+        .pseudo-search input:focus {
+            outline: none;
+            border-color: #f43f5e;
+        }
+        .pseudo-search input::placeholder {
+            color: #666;
+        }
+        .pseudo-search button {
+            background: #f43f5e;
+            border: none;
+            color: #fff;
+            padding: 9px 18px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .pseudo-search button:hover {
+            background: #dc2f4d;
+        }
+        #openbox, #pixels, #spin, #pokespin, #fish {
+            margin: 20px auto;
+            box-shadow: 0 0 10px #222;
+            padding: 20px;
+            position: relative;
+            top: 20px;
+            border: 1px solid #222;
+            max-width: 1000px;
+        }
+        .stats {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 10px;
+            font-size: 1.1em;
+            position: absolute;
+            left: 34px;
+            top: 75px;
+        }
+        .stat-item {
+            display: flex;
+            align-items: center;
+        }
+        .stat-label {
+            color: #f43f5e;
+            font-size: 15px;
+        }
+        .stat-count {
+            font-weight: bold;
+            color: #f1f1f1;
+            font-size: 15px;
+            margin-left: 5px;
+        }
+        .controls {
+            display: flex;
+            gap: 20px;
+            margin: 40px 0 30px 0;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+        }
+        .control-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        label {
+            font-weight: bold;
+            color: #888;
+        }
+        button {
+            padding: 10px 15px;
+            background: #2a2a2a;
+            color: #fff;
+            border: 1px solid #444;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: all 0.2s ease;
+        }
+        button:hover {
+            border-color: #f43f5e;
+            background: #333;
+        }
+        button.active {
+            background: #f43f5e;
+            border-color: #f43f5e;
+        }
+        .boxes-table {max-width: 750px;}
+        .spin-table {max-width: 395px;}
+        .poke-rate-table {max-width: 205px;}
+        .boxes-table, .spin-table, .poke-rate-table {
+            margin: 30px auto;
+            border-collapse: collapse;
+            background: #2a2a2a;
+            border: 2px solid #f43f5e;
+            display: block;
+            overflow-x: auto;
+        }
+        td img {max-width: 30px;}
+        
+        .boxes-table thead, .spin-table thead, .poke-rate-table thead {
+            background: #1a1a1a;
+            border-bottom: 2px solid #f43f5e;
+        }
+        .boxes-table th, .spin-table th, .poke-rate-table th {
+            padding: 15px;
+            text-align: center;
+            color: #f43f5e;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 1px;
+            border-right: 1px solid #444;
+        }
+        .boxes-table th:last-child, .spin-table th:last-child, .poke-rate-table th:last-child {
+            border-right: none;
+        }
+        .boxes-table td, .spin-table td, .poke-rate-table td {
+            padding: 15px;
+            border-right: 1px solid #444;
+            color: #fff;
+            font-size: 0.8em;
+        }
+        .boxes-table td:last-child, .spin-table td:last-child, .poke-rate-table td:last-child {
+            border-right: none;
+        }
+        .boxes-table tbody tr, .spin-table tbody tr, .poke-rate-table tbody tr {
+            border-bottom: 1px solid #444;
+            transition: background 0.2s;
+        }
+        .boxes-table tbody tr:hover, .spin-table tbody tr:hover, .poke-rate-table tbody tr:hover {
+            background: #333;
+        }
+        .boxes-table tbody tr:last-child, .spin-table tbody tr:last-child, .poke-rate-table tbody tr:last-child {
+            border-bottom: none;
+        }
+        .box-name {
+            font-weight: bold;
+            color: #f43f5e;
+            text-transform: uppercase;
+            min-width: 100px;
+        }
+        .box-price {
+            color: #60a5fa;
+            min-width: 100px;
+        }
+        .rarity-cell {
+            text-align: center;
+            min-width: 80px;
+        }
+        .rarity-commun { color: #9ca3af; }
+        .rarity-peucommun { color: #4ade80; }
+        .rarity-rare { color: #60a5fa; }
+        .rarity-epique { color: #a855f7; }
+        .rarity-legendaire { color: #fbbf24; }
+        /* Rareté du Pokédex (!pokespin) — mêmes couleurs que les cartes
+           .card.poke-* de la galerie, l'overlay OBS et l'embed Discord. */
+        .prarity-commun     { color: #9aa79a; }
+        .prarity-peucommun  { color: #4fbf4f; }
+        .prarity-rare       { color: #5ab0e0; }
+        .prarity-epique     { color: #b57de8; }
+        .prarity-legendaire { color: #f0a030; }
+        .prarity-shiny      { color: #ffe14d; }
+        /* ─── Classement ─────────────────────────────────────────────────────
+           Contrairement aux tableaux de la page Infos (contenu fixe, largeurs
+           réglées à la main), les pseudos ici sont de longueur variable — donc
+           .rank-table utilise table-layout:fixed + colonnes en % pour garder
+           une largeur stable et remplie quel que soit le pseudo, plutôt que le
+           patron display:block/auto-layout des autres tableaux (qui rétrécit
+           la table en dessous de sa largeur max dès que le contenu est court,
+           laissant un espace vide disgracieux dans l'encadré). */
+        .rank-table-wrap {
+            max-width: 560px;
+            margin: 30px auto;
+            overflow-x: auto;
+            background: #2a2a2a;
+            border: 2px solid #f43f5e;
+        }
+        .rank-table {
+            width: 100%;
+            min-width: 380px;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+        .rank-table thead {
+            background: #1a1a1a;
+            border-bottom: 2px solid #f43f5e;
+        }
+        .rank-table th {
+            padding: 15px;
+            text-align: center;
+            color: #f43f5e;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 1px;
+            border-right: 1px solid #444;
+        }
+        .rank-table th:last-child { border-right: none; }
+        .rank-table td {
+            padding: 15px;
+            border-right: 1px solid #444;
+            color: #fff;
+            font-size: 0.8em;
+            overflow-wrap: break-word;
+        }
+        .rank-table td:last-child { border-right: none; }
+        .rank-table tbody tr {
+            border-bottom: 1px solid #444;
+            transition: background 0.2s;
+        }
+        .rank-table tbody tr:hover { background: #333; }
+        .rank-table tbody tr:last-child { border-bottom: none; }
+        .rank-table th:nth-child(1), .rank-table td:nth-child(1) { width: 18%; }
+        .rank-table th:nth-child(2), .rank-table td:nth-child(2) { width: 47%; }
+        .rank-table th:nth-child(3), .rank-table td:nth-child(3) { width: 35%; }
+        .rank-position {
+            text-align: center;
+            font-weight: bold;
+        }
+        .rank-pseudo {
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .rank-count {
+            text-align: center;
+            color: #60a5fa;
+            font-weight: bold;
+        }
+        .rank-table tbody tr.rank-1 .rank-position { color: #ffd700; }
+        .rank-table tbody tr.rank-2 .rank-position { color: #c0c0c0; }
+        .rank-table tbody tr.rank-3 .rank-position { color: #cd7f32; }
+        .goty-desc {
+            text-align: center;
+            text-transform: uppercase;
+            color: #fbbf24;
+        }
+        .optuto h1, #pixels h1, #spin h1, #pokespin h1, #fish h1 {
+            color: #f43f5e;
+            font-size: 32px;
+            text-align: center;
+        }
+        .optuto, .pxtuto, .spintuto, .pokespintuto, .fishtuto {
+            text-align: center;
+        }
+        .optuto .tuto-box1 {
+            font-weight: 700;
+        }
+        .optuto .tuto-box2 {
+            color: #fbbf24;
+            font-style: italic;
+            font-weight: 700;
+        }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+            padding: 0 20px;
+        }
+        .card {
+            background: #2a2a2a;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+            border: 1px solid #444;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+        .card-image {
+            width: 100%;
+            height: 180px;
+            background: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            color: #444;
+            overflow: hidden;
+            position: relative;
+        }
+        .card-image img {
+            /* Affiche l'image à sa taille réelle (les gifs "showdown" sont
+               petits, ~96px) au lieu de l'étirer pour remplir la case, ce qui
+               la rendait floue/pixelisée. max-width/max-height la réduit
+               seulement si elle dépasse la case (utile pour le repli PNG
+               "official-artwork", plus grand). */
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .card-info {
+            padding: 12px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .card-name {
+            font-weight: bold;
+            font-size: 0.8em;
+            margin-bottom: 6px;
+            line-height: 1.2;
+            color: #fff;
+            text-transform: uppercase;
+        }
+        .card-quantity {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            color: #fbbf24;
+            font-weight: bold;
+            font-size: 16px;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        .card-year {
+            font-size: 0.85em;
+            color: #888;
+            position: absolute;
+            top: -20px;
+            left: 7px;
+        }
+        .card-rarity {
+            font-family: Helvetica, sans-serif;
+            font-size: 0.7em;
+            font-weight: bold;
+            text-transform: uppercase;
+            padding: 4px 8px;
+            border-radius: 3px;
+            text-align: center;
+            margin-top: auto;
+        }
+        .card.commun { border-color: #9ca3af; }
+        .card.commun .card-rarity { background: #9ca3af; color: #000; }
+        .card.peucommun { border-color: #4ade80; }
+        .card.peucommun .card-rarity { background: #4ade80; color: #000; }
+        .card.rare { border-color: #60a5fa; }
+        .card.rare .card-rarity { background: #60a5fa; color: #000; }
+        .card.epique { border-color: #a855f7; }
+        .card.epique .card-rarity { background: #a855f7; color: #fff; }
+        .card.legendaire { border-color: #fbbf24; }
+        .card.legendaire .card-rarity { background: #fbbf24; color: #000; }
+        .card.goty {
+            border-color: #f43f5e;
+            box-shadow: 0 0 15px rgba(244, 63, 94, 0.3);
+        }
+        .card.goty .card-rarity {
+            background: #f43f5e;
+            color: #fff;
+        }
+        /* ─── Pokédex ───────────────────────────────────────────────────────
+           Couleurs de rareté distinctes de celles du GameDex ci-dessus (mêmes
+           couleurs que le ruban OBS !pokespin), préfixées "poke-" pour ne pas
+           entrer en conflit avec .card.commun/.rare/etc. définies plus haut. */
+        .card.poke-commun     { border-color: #9aa79a; }
+        .card.poke-peucommun  { border-color: #4fbf4f; }
+        .card.poke-rare       { border-color: #5ab0e0; }
+        .card.poke-epique     { border-color: #b57de8; }
+        .card.poke-legendaire { border-color: #f0a030; }
+        .card.poke-shiny {
+            border-color: #ffe14d;
+            box-shadow: 0 0 14px 1px rgba(255, 225, 77, 0.45);
+        }
+        .card.poke-uncaught {
+            border-color: #444;
+            cursor: default;
+        }
+        .card.poke-uncaught .card-name {
+            color: #555;
+        }
+        .card.poke-uncaught .card-image img {
+            filter: grayscale(100%) brightness(0.35);
+        }
+        .card .shiny-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            font-size: 15px;
+            filter: drop-shadow(0 0 3px #000);
+            z-index: 2;
+        }
+        .card .card-gen {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(0, 0, 0, 0.6);
+            color: #ccc;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            padding: 3px 6px;
+            border-radius: 4px;
+            z-index: 2;
+        }
+        /* ─── Fenêtre de détail Pokémon ────────────────────────────────────── */
+        .poke-detail-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        .poke-detail-box {
+            position: relative;
+            background: #1a1a1a;
+            border: 2px solid #f43f5e;
+            border-radius: 10px;
+            padding: 24px;
+            width: 100%;
+            max-width: 580px;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .poke-detail-close {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 24px;
+            line-height: 1;
+            cursor: pointer;
+            padding: 4px;
+        }
+        .poke-detail-close:hover { color: #f43f5e; }
+        .poke-detail-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .poke-detail-sprite {
+            width: 60%;
+            height: 60%;
+            object-fit: contain;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+        .poke-detail-dex {
+            color: #888;
+            font-size: 0.85em;
+        }
+        .poke-detail-name {
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.2em;
+            text-transform: uppercase;
+        }
+        .poke-detail-gen {
+            display: inline-block;
+            margin-top: 4px;
+            background: rgba(244, 63, 94, 0.15);
+            color: #f43f5e;
+            font-size: 0.75em;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .poke-detail-types {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .poke-type-badge {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            color: #fff;
+            font-size: 0.75em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.35);
+        }
+        .poke-detail-desc {
+            color: #ddd;
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-bottom: 16px;
+            min-height: 40px;
+        }
+        .poke-detail-stats {
+            display: flex;
+            gap: 20px;
+            border-top: 1px solid #333;
+            padding-top: 14px;
+        }
+        .poke-detail-stat {
+            flex: 1;
+            text-align: center;
+        }
+        .poke-detail-stat-label {
+            color: #888;
+            font-size: 0.7em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .poke-detail-stat-value {
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .poke-detail-caught {
+            color: #888;
+            font-size: 0.75em;
+            text-align: center;
+            margin-top: 12px;
+            font-style: italic;
+        }
+        /* ─── Fenêtre de détail Jeu (GameDex) ──────────────────────────────
+           Même principe que poke-detail-* ci-dessus (données figées en dur
+           cette fois, récupérées une fois depuis l'API Steam - pas de fetch
+           live possible côté navigateur, Steam ne supporte pas CORS). Classes
+           dupliquées plutôt que réutilisées pour ne pas risquer d'impacter la
+           box Pokémon si l'une des deux est retouchée plus tard. */
+        .game-detail-box {
+            position: relative;
+            background: #1a1a1a;
+            border: 2px solid #f43f5e;
+            border-radius: 10px;
+            padding: 24px;
+            width: 100%;
+            max-width: 580px;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .game-detail-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .game-detail-cover {
+            width: 60%;
+            object-fit: contain;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+        .game-detail-year {
+            color: #888;
+            font-size: 0.85em;
+        }
+        .game-detail-name {
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .game-detail-badge {
+            display: inline-block;
+            margin-top: 4px;
+            background: rgba(244, 63, 94, 0.15);
+            color: #f43f5e;
+            font-size: 0.75em;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .game-detail-desc {
+            color: #ddd;
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+        .game-detail-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            border-top: 1px solid #333;
+            padding-top: 14px;
+            margin-bottom: 16px;
+        }
+        .game-detail-meta-item {
+            flex: 1 1 40%;
+            min-width: 130px;
+        }
+        .game-detail-meta-label {
+            color: #888;
+            font-size: 0.7em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .game-detail-meta-value {
+            color: #fff;
+            font-size: 0.95em;
+        }
+        .game-detail-metacritic {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.95em;
+        }
+        .game-detail-metacritic.mc-high { background: #6c3; color: #113300; }
+        .game-detail-metacritic.mc-mid { background: #fc3; color: #4d3800; }
+        .game-detail-metacritic.mc-low { background: #f33; color: #3d0000; }
+        .game-detail-metacritic.mc-na { background: #444; color: #aaa; }
+        .game-detail-steam-link {
+            text-align: center;
+        }
+        .game-detail-steam-link a {
+            display: inline-block;
+            background: #1b2838;
+            color: #66c0f4;
+            border: 1px solid #2a475e;
+            padding: 8px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        .game-detail-steam-link a:hover {
+            background: #2a475e;
+        }
+        .card .card-dex {
+            font-size: 0.7em;
+            color: #888;
+            margin-bottom: 2px;
+        }
+        .collection-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .collection-tabs button {
+            padding: 10px 20px;
+            background: #1a1a1a;
+            color: #888;
+            border: 1px solid #444;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Electrolize', sans-serif;
+            font-size: 0.95em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .collection-tabs button.active {
+            background: #f43f5e;
+            color: #fff;
+            border-color: #f43f5e;
+        }
+        .empty {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            color: #888;
+            font-size: 1.1em;
+        }
+        .filter-group {
+            display: flex;
+            gap: 10px;
+        }
+        .btn-menu {
+            position: relative;
+            top: -17px;
+            margin-left: 20px;
+        }
+        /* Conteneur des boutons de header ("Infos", "Classement") : gère le
+           positionnement (absolu, calé à gauche, centré verticalement), les
+           boutons eux-mêmes (.btn-index) ne font plus que leur propre style. */
+        .header-buttons {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 10px;
+        }
+        .btn-index {
+            display: inline-block;
+            padding: 8px 16px;
+            margin: 0;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: border-color 0.2s ease, background 0.2s ease;
+            text-decoration: none;
+            color: #f43f5e;
+            text-transform: uppercase;
+            font-size: 0.8em;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .btn-index:hover {
+            border-color: #f43f5e;
+            background: #222;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid #222;
+            position: relative;
+            top: 20px;
+        }
+        footer a {
+            text-decoration: none;
+            color: #222;
+            font-size: 14px;
+        }
+        @media (max-width:1000px) {
+            header {
+                min-height: 110px;
+            }
+            .header-buttons {
+                position: relative;
+                left: inherit;
+                top: 50px;
+                justify-content: center;
+
+            }
+            #home-section .header-buttons {top:80px;}
+            .btn-menu {
+                top: 40px;
+            }
+            .stats {
+                position: relative;
+                top: 15px;
+                left: 0;
+            }
+        }
+    
