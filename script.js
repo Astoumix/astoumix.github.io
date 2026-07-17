@@ -66,6 +66,19 @@ const GAME_DETAILS = {
             document.title = `GameDex - ${username}`;
             document.getElementById("title").textContent = `GameDex - ${username}`;
             if (collectionInterval) clearInterval(collectionInterval);
+            // Repart d'une collection vide à chaque changement de pseudo (clic
+            // sur le classement, recherche, etc.) - sinon le garde-fou
+            // "data.length > 0" plus bas (qui protège contre un blip réseau
+            // ponctuel pendant le polling du MÊME utilisateur) empêchait aussi
+            // de vider la galerie quand on arrivait sur la page d'un pseudo
+            // qui n'a réellement aucun jeu : elle continuait d'afficher la
+            // collection du pseudo précédent.
+            collection = {};
+            lastCollectionDataJson = null;
+            // Idem : on redessine tout de suite (galerie vide) plutôt que
+            // d'attendre la réponse réseau, pour ne pas laisser la galerie de
+            // l'ancien pseudo affichée le temps du fetch.
+            render();
             async function fetchCollection() {
                 try {
                     const url = `https://ygqtbfwolcbcaxmldhta.supabase.co/rest/v1/collections?username=eq.${username}&apikey=sb_publishable_3iKEJfCiQEFxF-1UQE586g_ggX6RDqG`;
@@ -179,6 +192,16 @@ const GAME_DETAILS = {
         }
         async function loadPokedex() {
             if (pokedexInterval) clearInterval(pokedexInterval);
+            // Même correctif que loadCollection() ci-dessus : repartir d'un
+            // Pokédex vide à chaque changement de pseudo, pour ne pas laisser
+            // le garde-fou "data.length > 0" plus bas afficher la collection
+            // du pseudo précédent sur la page d'un pseudo qui n'a rien.
+            pokedexCollection = {};
+            pokedexCaughtAt = {};
+            lastPokedexDataJson = null;
+            // Idem : redessine tout de suite (Pokédex vide) plutôt que
+            // d'attendre la réponse réseau.
+            renderPokedex();
             async function fetchPokedex() {
                 try {
                     const username = getUsername();
