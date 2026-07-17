@@ -46,6 +46,49 @@ const GAME_DETAILS = {
                 img.style.display = "none";
             }
         }
+        // Extrait le numéro de dex national depuis une URL PokeAPI du type
+        // "https://pokeapi.co/api/v2/pokemon-species/2/" -> 2 (dernier
+        // segment non vide de l'URL).
+        function extractDexFromSpeciesUrl(url) {
+            const parts = url.split("/").filter(Boolean);
+            return parseInt(parts[parts.length - 1], 10);
+        }
+        // La réponse evolution-chain de PokeAPI est un arbre récursif
+        // (chain.evolves_to[].evolves_to[]...) pour gérer les évolutions à
+        // embranchements (ex: Évoli). On l'aplatit en "étages" par
+        // profondeur : chaque étage est un tableau de numéros de dex (un
+        // seul élément la plupart du temps, plusieurs en cas
+        // d'embranchement), pour un affichage "Evol 1 > Evol 2 > Evol 3"
+        // (ou "Evol 1 > [Evol 2a / 2b / ...]" pour les embranchements).
+        function parseEvolutionChain(chain) {
+            const stages = [];
+            let currentLevel = [chain];
+            while (currentLevel.length > 0) {
+                stages.push(currentLevel.map(node => extractDexFromSpeciesUrl(node.species.url)));
+                const nextLevel = [];
+                currentLevel.forEach(node => node.evolves_to.forEach(n => nextLevel.push(n)));
+                currentLevel = nextLevel;
+            }
+            return stages;
+        }
+        // Affiche la chaîne d'évolution façon "Evol 1 > Evol 2 > Evol 3",
+        // avec les mêmes sprites animés (+ repli PNG) que le reste du site,
+        // grisés comme les Pokémon non capturés si l'étage ne fait pas
+        // partie du Pokédex de l'utilisateur actuellement affiché.
+        function renderEvolutionChain(stages) {
+            if (!stages || stages.length <= 1) return "";
+            return stages.map((stageDexes, i) => {
+                const spritesHtml = stageDexes.map(stageDex => {
+                    const owned = !!pokedexCollection[stageDex] || !!pokedexCollection[-stageDex];
+                    const cls = "poke-evolution-sprite" + (owned ? "" : " poke-evolution-uncaught");
+                    const spriteUrl = pokedexSpriteUrl(stageDex, false);
+                    const fallbackUrl = pokedexSpriteFallbackUrl(stageDex, false);
+                    return `<img class="${cls}" src="${spriteUrl}" data-fallback="${fallbackUrl}" data-uncaught="1" alt="" onerror="onPokeSpriteError(this)">`;
+                }).join("");
+                const arrow = i < stages.length - 1 ? '<div class="poke-evolution-arrow">›</div>' : "";
+                return `<div class="poke-evolution-stage"><div class="poke-evolution-branch">${spritesHtml}</div></div>${arrow}`;
+            }).join("");
+        }
         let collection = {};
         let currentFilter = "all";
         let currentSort = "name";
@@ -345,6 +388,7 @@ const GAME_DETAILS = {
             document.getElementById("poke-detail-gen").textContent = `GEN ${getPokedexGeneration(dex)}`;
             document.getElementById("poke-detail-types").innerHTML = "";
             document.getElementById("poke-detail-stats").innerHTML = "";
+            document.getElementById("poke-detail-evolution").innerHTML = "";
             const caughtKey = shiny ? -dex : dex;
             document.getElementById("poke-detail-caught").textContent = formatCapturedAt(pokedexCaughtAt[caughtKey]);
             const rarityKey = shiny ? "shiny" : getRarityClassPoke(details.rarity);
@@ -370,11 +414,26 @@ const GAME_DETAILS = {
                 const description = frEntry
                     ? frEntry.flavor_text.replace(/[\n\f\r]+/g, " ")
                     : (GEN9_FR_DESCRIPTIONS[dex] || "Pas de description officielle disponible en français pour ce Pokémon.");
+                // La chaîne d'évolution est récupérée à part (son URL n'est
+                // connue qu'une fois la fiche espèce chargée) : une erreur
+                // ici ne doit pas empêcher l'affichage du reste de la fiche,
+                // on se contente alors de masquer la ligne d'évolutions.
+                let evolutionStages = [];
+                try {
+                    const evoRes = await fetch(species.evolution_chain.url);
+                    if (evoRes.ok) {
+                        const evoData = await evoRes.json();
+                        evolutionStages = parseEvolutionChain(evoData.chain);
+                    }
+                } catch (evoError) {
+                    evolutionStages = [];
+                }
                 const data = {
                     description,
                     heightM: (pokemon.height / 10).toFixed(1),
                     weightKg: (pokemon.weight / 10).toFixed(1),
-                    types: pokemon.types.map(t => t.type.name)
+                    types: pokemon.types.map(t => t.type.name),
+                    evolutionStages
                 };
                 pokeDetailCache[dex] = data;
                 // Ne réaffiche que si la fenêtre est toujours ouverte sur ce
@@ -392,6 +451,7 @@ const GAME_DETAILS = {
         function renderPokeDetail(data) {
             document.getElementById("poke-detail-types").innerHTML = renderPokeTypeBadges(data.types || []);
             document.getElementById("poke-detail-desc").textContent = data.description;
+            document.getElementById("poke-detail-evolution").innerHTML = renderEvolutionChain(data.evolutionStages);
             document.getElementById("poke-detail-stats").innerHTML =
                 `<div class="poke-detail-stat"><div class="poke-detail-stat-label">Taille</div><div class="poke-detail-stat-value">${data.heightM} m</div></div>`
                 + `<div class="poke-detail-stat"><div class="poke-detail-stat-label">Poids</div><div class="poke-detail-stat-value">${data.weightKg} kg</div></div>`;
