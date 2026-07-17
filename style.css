@@ -918,6 +918,9 @@
             .btn-menu {
                 top: 40px;
             }
+            .control-group label {
+                visibility: hidden;
+            }
             .stats {
                 position: relative;
                 top: 15px;
