@@ -302,6 +302,7 @@ const GAME_DETAILS = {
                 }
             }
             if (currentPokeFilter === "captured") cards = cards.filter(c => c.caught);
+            if (currentPokeFilter === "manquant") cards = cards.filter(c => !c.caught);
             if (currentPokeFilter === "shiny") cards = cards.filter(c => c.shiny);
             if (currentPokeFilter === "doublon") cards = cards.filter(c => c.qty >= 2);
             gallery.innerHTML = cards.map(c => {
