@@ -478,7 +478,11 @@ const GAME_DETAILS = {
                 ? '<tr><td colspan="3" class="empty">Personne pour l\'instant</td></tr>'
                 : ranking.map((r, i) => {
                     const rankClass = i < 3 ? ` rank-${i + 1}` : '';
-                    return `<tr class="rank-row${rankClass}"><td class="rank-position">#${i + 1}</td><td class="rank-pseudo">${r.username}</td><td class="rank-count">${r.count}</td></tr>`;
+                    // Clic sur la ligne -> redirige vers la page perso du
+                    // pseudo concerné (même mécanisme que le champ de
+                    // recherche : changer le hash déclenche initPage() via
+                    // l'écouteur "hashchange").
+                    return `<tr class="rank-row${rankClass}" onclick="window.location.hash = '${r.username}'"><td class="rank-position">#${i + 1}</td><td class="rank-pseudo">${r.username}</td><td class="rank-count">${r.count}</td></tr>`;
                 }).join('');
         }
         async function loadClassement() {
