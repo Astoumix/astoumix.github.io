@@ -741,6 +741,117 @@
             color: #888;
             font-size: 1.1em;
         }
+        /* ─── Onglet Succès ─────────────────────────────────────────────────
+           Système à paliers calculé à la volée (voir script.js) : chaque
+           carte est soit binaire (verrouillée/débloquée), soit à paliers
+           (pastilles I/II/III... + barre de progression vers le prochain
+           palier). Aucune donnée persistée, tout est recalculé à chaque
+           rendu depuis collection/pokedexCollection. */
+        .succes-group {
+            margin: 30px 20px 0;
+        }
+        .succes-group-title {
+            color: #f43f5e;
+            font-size: 1.1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 8px;
+            margin-bottom: 16px;
+        }
+        .succes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 14px;
+            margin-bottom: 10px;
+        }
+        .succes-card {
+            background: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .succes-card.succes-unlocked {
+            border-color: #f0a030;
+            background: rgba(240, 160, 48, 0.08);
+        }
+        .succes-icon {
+            font-size: 1.8em;
+            line-height: 1;
+            flex-shrink: 0;
+            filter: grayscale(100%);
+            opacity: 0.5;
+        }
+        .succes-card.succes-unlocked .succes-icon {
+            filter: none;
+            opacity: 1;
+        }
+        .succes-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .succes-name {
+            color: #fff;
+            font-weight: bold;
+            font-size: 0.95em;
+        }
+        .succes-desc {
+            color: #999;
+            font-size: 0.8em;
+            margin-top: 3px;
+            line-height: 1.4;
+        }
+        .succes-card.succes-unlocked .succes-desc {
+            color: #ccc;
+        }
+        .succes-pips {
+            display: flex;
+            gap: 4px;
+            margin-top: 6px;
+        }
+        .succes-pip {
+            display: inline-block;
+            width: 20px;
+            text-align: center;
+            font-size: 0.65em;
+            font-weight: bold;
+            color: #555;
+            border: 1px solid #444;
+            border-radius: 3px;
+            padding: 1px 0;
+        }
+        .succes-pip-unlocked {
+            color: #1a1a1a;
+            background: #f0a030;
+            border-color: #f0a030;
+        }
+        .succes-progress {
+            background: #1a1a1a;
+            border-radius: 4px;
+            height: 6px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+        .succes-progress-bar {
+            background: #f43f5e;
+            height: 100%;
+        }
+        .succes-progress-label {
+            color: #777;
+            font-size: 0.7em;
+            margin-top: 3px;
+        }
+        .succes-status {
+            flex-shrink: 0;
+            font-size: 1.1em;
+            color: #444;
+        }
+        .succes-card.succes-unlocked .succes-status {
+            color: #f0a030;
+        }
         .filter-group {
             display: flex;
             gap: 10px;
