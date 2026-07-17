@@ -920,7 +920,7 @@
                 top: 40px;
             }
             .control-group label {
-                visibility: hidden;
+                display: none;
             }
             .stats {
                 position: relative;
