@@ -656,11 +656,17 @@ const GAME_DETAILS = {
         // génération complétée"), les paliers servant uniquement pour les
         // succès à progression continue (captures, raretés, shiny...).
         const SUCCES_REGION_NAMES = ["Kanto", "Johto", "Hoenn", "Sinnoh", "Unys", "Kalos", "Alola", "Galar", "Paldea"];
-        function succesIsGenerationComplete(min, max) {
+        // Nombre d'espèces possédées dans une plage de dex donnée (utilisé à
+        // la fois pour savoir si une génération est complète ET pour
+        // afficher une vraie barre de progression - contrairement à un
+        // simple booléen, cette valeur avance au fur et à mesure des
+        // captures au sein de la région, pas seulement à la toute fin).
+        function succesRegionOwnedCount(min, max) {
+            let count = 0;
             for (let dex = min; dex <= max; dex++) {
-                if (!succesIsSpeciesOwned(dex)) return false;
+                if (succesIsSpeciesOwned(dex)) count++;
             }
-            return true;
+            return count;
         }
         const GENERATION_ACHIEVEMENTS = POKEDEX_GENERATIONS.map(([min, max, gen]) => {
             const regionName = SUCCES_REGION_NAMES[gen - 1] || `Génération ${gen}`;
@@ -668,7 +674,7 @@ const GAME_DETAILS = {
             return {
                 id: `poke-gen${gen}`, category: "pokedex", icon: "🗺️", name: `${regionName} Complet`,
                 desc: `Capturer les ${speciesCount} Pokémon de la région ${regionName}.`,
-                tiers: [1], compute: () => succesIsGenerationComplete(min, max) ? 1 : 0
+                tiers: [speciesCount], compute: () => succesRegionOwnedCount(min, max)
             };
         });
         function succesIsGameOwned(gameId) {
@@ -706,12 +712,12 @@ const GAME_DETAILS = {
             // ─ Pokédex : générations (un succès par génération, voir plus haut) ─
             ...GENERATION_ACHIEVEMENTS,
             // ─ Pokédex : rareté ─
-            { id: "poke-premiererarete", category: "pokedex", icon: "🔷", name: "Première Rareté",
-              desc: "Capturer un premier Pokémon Rare.", tiers: [1], compute: () => succesRarityOwnedCount("Rare") },
+            { id: "poke-rare", category: "pokedex", icon: "🔷", name: "Collectionneur Rare",
+              desc: (n) => `Capturer ${n} Pokémon Rares uniques (sur 292).`, tiers: [1, 50, 150, 292], compute: () => succesRarityOwnedCount("Rare") },
             { id: "poke-epique", category: "pokedex", icon: "🟣", name: "Collectionneur Épique",
               desc: (n) => `Capturer ${n} Pokémon Épiques uniques (sur 176).`, tiers: [10, 50, 100, 176], compute: () => succesRarityOwnedCount("Epique") },
-            { id: "poke-legendaire", category: "pokedex", icon: "🟡", name: "Légende Vivante",
-              desc: "Capturer un premier Pokémon Légendaire.", tiers: [1], compute: () => succesRarityOwnedCount("Legendaire") },
+            { id: "poke-legendaire", category: "pokedex", icon: "👑", name: "Collectionneur Légendaire",
+              desc: (n) => `Capturer ${n} Pokémon Légendaires uniques (sur 117).`, tiers: [1, 25, 60, 117], compute: () => succesRarityOwnedCount("Legendaire") },
             // ─ Pokédex : shiny ─
             { id: "poke-premiershiny", category: "pokedex", icon: "✨", name: "Premier Éclat",
               desc: "Capturer un premier Pokémon shiny.", tiers: [1], compute: succesUniqueShinyCaughtCount },
@@ -750,7 +756,10 @@ const GAME_DETAILS = {
                     const unlockedTiers = a.tiers.filter(t => value >= t).length;
                     totalUnlocked += unlockedTiers;
                     totalTiers += a.tiers.length;
-                    if (a.tiers.length === 1) {
+                    // Succès purement binaire (un seul palier ET ce palier
+                    // vaut 1) : pas de barre de progression pertinente,
+                    // puisqu'il n'existe pas d'état "à moitié débloqué".
+                    if (a.tiers.length === 1 && a.tiers[0] === 1) {
                         const unlocked = value >= a.tiers[0];
                         const descText = typeof a.desc === "function" ? a.desc(a.tiers[0]) : a.desc;
                         return `<div class="succes-card ${unlocked ? "succes-unlocked" : ""}">`
@@ -759,16 +768,23 @@ const GAME_DETAILS = {
                             + `<div class="succes-status">${unlocked ? "✓" : "🔒"}</div>`
                             + `</div>`;
                     }
+                    // Sinon (plusieurs paliers, ou un seul palier avec un
+                    // objectif > 1 comme les succès de région) : barre de
+                    // progression vers le prochain palier. Les pastilles
+                    // I/II/III... ne s'affichent que s'il y a plusieurs
+                    // paliers à distinguer.
                     const nextIndex = a.tiers.findIndex(t => value < t);
                     const isComplete = nextIndex === -1;
                     const nextTarget = isComplete ? a.tiers[a.tiers.length - 1] : a.tiers[nextIndex];
                     const progressPct = Math.min(100, Math.round((value / nextTarget) * 100));
                     const descText = isComplete ? "Tous les paliers débloqués !" : (typeof a.desc === "function" ? a.desc(nextTarget) : a.desc);
-                    const pips = a.tiers.map((t, i) => `<span class="succes-pip${value >= t ? " succes-pip-unlocked" : ""}">${SUCCES_ROMAN[i]}</span>`).join("");
+                    const pipsHtml = a.tiers.length > 1
+                        ? `<div class="succes-pips">${a.tiers.map((t, i) => `<span class="succes-pip${value >= t ? " succes-pip-unlocked" : ""}">${SUCCES_ROMAN[i]}</span>`).join("")}</div>`
+                        : "";
                     const progressHtml = isComplete ? "" : `<div class="succes-progress"><div class="succes-progress-bar" style="width:${progressPct}%;"></div></div><div class="succes-progress-label">${value}/${nextTarget}</div>`;
                     return `<div class="succes-card ${isComplete ? "succes-unlocked" : ""}">`
                         + `<div class="succes-icon">${a.icon}</div>`
-                        + `<div class="succes-info"><div class="succes-name">${a.name}</div><div class="succes-pips">${pips}</div><div class="succes-desc">${descText}</div>${progressHtml}</div>`
+                        + `<div class="succes-info"><div class="succes-name">${a.name}</div>${pipsHtml}<div class="succes-desc">${descText}</div>${progressHtml}</div>`
                         + `<div class="succes-status">${isComplete ? "✓" : ""}</div>`
                         + `</div>`;
                 }).join("");
