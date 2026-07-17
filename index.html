@@ -257,6 +257,7 @@
             <div class="collection-tabs">
                 <button id="tab-btn-gamedex" class="active" data-tab="gamedex">GameDex</button>
                 <button id="tab-btn-pokedex" data-tab="pokedex">Pokédex</button>
+                <button id="tab-btn-succes" data-tab="succes">Succès</button>
             </div>
             <!-- Vue GameDex (!openbox) -->
             <div id="view-gamedex" class="collection-view">
@@ -316,6 +317,16 @@
                     </div>
                 </div>
                 <div class="gallery" id="gallery-pokedex"></div>
+            </div>
+            <!-- Vue Succès (calculée à la volée depuis la collection GameDex + Pokédex, aucune donnée stockée à part) -->
+            <div id="view-succes" class="collection-view" style="display:none;">
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Succès débloqués</div>
+                        <div class="stat-count"><span id="count-succes">0</span>/<span id="count-succes-total">0</span></div>
+                    </div>
+                </div>
+                <div id="succes-groups"></div>
             </div>
         </section>
         <!-- PAGE CLASSEMENT -->
