@@ -210,6 +210,10 @@ const GAME_DETAILS = {
                     const quantityDisplay = g.quantity >= 2 ? `<div class="card-quantity">x${g.quantity}</div>` : '';
                     return `<div class="card ${cardClass}" onclick="openGameDetail(${g.id}, ${g.isGoty})"><div class="card-image">${quantityDisplay}<img src="${imageUrl}" alt="${g.name}" onerror="this.style.display='none'"></div><div class="card-info"><div class="card-name">${g.name}</div><div class="card-year">${g.year}</div><div class="card-rarity">${g.isGoty ? "GOTY" : g.rarity}</div></div></div>`;
                 }).join('');
+            // Les succès dépendent à la fois de collection et pokedexCollection
+            // -> recalculés ici comme dans renderPokedex() ci-dessous, pour
+            // rester à jour quelle que soit la source du dernier changement.
+            renderAchievements();
         }
         // ─── Pokédex : chargement + rendu ───────────────────────────────────
         // Même convention que collection ci-dessus (clé positive = normal,
@@ -314,6 +318,7 @@ const GAME_DETAILS = {
                 const genBadge = `<div class="card-gen">GEN ${getPokedexGeneration(c.dex)}</div>`;
                 return `<div class="card ${cardClass}" onclick="openPokeDetail(${c.dex}, ${c.shiny})"><div class="card-image">${shinyBadge}${quantityDisplay}${genBadge}<img src="${spriteUrl}" data-fallback="${fallbackUrl}" alt="${c.name}" onerror="onPokeSpriteError(this)"></div><div class="card-info"><div class="card-dex">${padDex(c.dex)}</div><div class="card-name">${c.name}</div></div></div>`;
             }).join('');
+            renderAchievements();
         }
         // ─── Fenêtre de détail Pokémon ───────────────────────────────────────
         // Description officielle (FR), poids et taille récupérés à la demande
@@ -608,14 +613,184 @@ const GAME_DETAILS = {
             document.title = `Classement ${labels[tab]}`;
             document.getElementById("classement-title").textContent = `Classement - ${labels[tab]}`;
         }
+        // ─── Succès ──────────────────────────────────────────────────────────
+        // Système de succès à paliers (voir discussion avec Astou) : aucune
+        // table Supabase dédiée, aucune date d'obtention stockée. Chaque
+        // succès est recalculé à la volée à chaque rendu à partir de l'état
+        // actuel de collection/pokedexCollection (donc de la page consultée,
+        // exactement comme le reste du site). "tiers" à un seul palier = 1
+        // succès binaire (verrouillé/débloqué) ; plusieurs paliers = une
+        // barre de progression vers le prochain, avec des pastilles I/II/III...
+        const SUCCES_ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
+        // "Capturé" = même définition que le compteur "Capturés X/1025" déjà
+        // affiché (clé positive = normal, hors shiny) pour ne pas afficher
+        // deux chiffres différents pour la même idée sur la même page.
+        function succesUniqueNormalCaughtCount() {
+            return Object.keys(pokedexCollection).filter(k => pokedexCollection[k] > 0 && k > 0).length;
+        }
+        function succesUniqueShinyCaughtCount() {
+            return Object.keys(pokedexCollection).filter(k => pokedexCollection[k] > 0 && k < 0).length;
+        }
+        // Total de captures cumulées, doublons compris, normal + shiny
+        // confondus (représente l'activité de spin plutôt que la complétion).
+        function succesTotalPokeCaptures() {
+            return Object.values(pokedexCollection).reduce((sum, q) => sum + (q > 0 ? q : 0), 0);
+        }
+        // Contrairement au compteur "Capturés" (qui ignore les captures
+        // shiny-only), une espèce est ici considérée "possédée" dès qu'elle
+        // a été obtenue sous n'importe quelle forme - utilisé pour les
+        // succès de complétion (génération, rareté) où avoir uniquement la
+        // version shiny d'une espèce doit quand même compter.
+        function succesIsSpeciesOwned(dex) {
+            return (pokedexCollection[dex] > 0) || (pokedexCollection[-dex] > 0);
+        }
+        function succesRarityOwnedCount(rarity) {
+            let count = 0;
+            for (let dex = 1; dex <= POKEDEX_TOTAL; dex++) {
+                if (POKEDEX_DETAILS[dex].rarity === rarity && succesIsSpeciesOwned(dex)) count++;
+            }
+            return count;
+        }
+        // Un succès à part entière par génération (et non un système à
+        // paliers) : c'est ce qui a été validé avec Astou ("un succès par
+        // génération complétée"), les paliers servant uniquement pour les
+        // succès à progression continue (captures, raretés, shiny...).
+        const SUCCES_REGION_NAMES = ["Kanto", "Johto", "Hoenn", "Sinnoh", "Unys", "Kalos", "Alola", "Galar", "Paldea"];
+        function succesIsGenerationComplete(min, max) {
+            for (let dex = min; dex <= max; dex++) {
+                if (!succesIsSpeciesOwned(dex)) return false;
+            }
+            return true;
+        }
+        const GENERATION_ACHIEVEMENTS = POKEDEX_GENERATIONS.map(([min, max, gen]) => {
+            const regionName = SUCCES_REGION_NAMES[gen - 1] || `Génération ${gen}`;
+            const speciesCount = max - min + 1;
+            return {
+                id: `poke-gen${gen}`, category: "pokedex", icon: "🗺️", name: `${regionName} Complet`,
+                desc: `Capturer les ${speciesCount} Pokémon de la région ${regionName}.`,
+                tiers: [1], compute: () => succesIsGenerationComplete(min, max) ? 1 : 0
+            };
+        });
+        function succesIsGameOwned(gameId) {
+            return (collection[gameId] > 0) || (collection[-gameId] > 0);
+        }
+        // Nombre de jeux uniques possédés, édition classique OU GOTY
+        // confondues (un même jeu possédé dans les deux éditions ne compte
+        // qu'une fois) - différent des compteurs "Jeux classiques"/"GOTY" du
+        // GameDex qui, eux, restent séparés par édition.
+        function succesUniqueGamesOwnedCount() {
+            let count = 0;
+            for (const id in GAME_DETAILS) {
+                if (succesIsGameOwned(parseInt(id, 10))) count++;
+            }
+            return count;
+        }
+        function succesGotyOwnedCount() {
+            return Object.keys(collection).filter(k => collection[k] > 0 && k < 0).length;
+        }
+        function succesGameRarityOwnedCount(rarity) {
+            let count = 0;
+            for (const id in GAME_DETAILS) {
+                if (GAME_DETAILS[id].rarity === rarity && succesIsGameOwned(parseInt(id, 10))) count++;
+            }
+            return count;
+        }
+        const ACHIEVEMENTS = [
+            // ─ Pokédex : captures ─
+            { id: "poke-premierpas", category: "pokedex", icon: "🎯", name: "Premier Pas",
+              desc: "Capturer un premier Pokémon.", tiers: [1], compute: succesUniqueNormalCaughtCount },
+            { id: "poke-chasseur", category: "pokedex", icon: "📘", name: "Chasseur",
+              desc: (n) => `Capturer ${n} Pokémon uniques.`, tiers: [25, 100, 250, 500, 1025], compute: succesUniqueNormalCaughtCount },
+            { id: "poke-eleveur", category: "pokedex", icon: "🥚", name: "Éleveur",
+              desc: (n) => `Atteindre ${n} captures cumulées (doublons compris).`, tiers: [50, 200, 500], compute: succesTotalPokeCaptures },
+            // ─ Pokédex : générations (un succès par génération, voir plus haut) ─
+            ...GENERATION_ACHIEVEMENTS,
+            // ─ Pokédex : rareté ─
+            { id: "poke-premiererarete", category: "pokedex", icon: "🔷", name: "Première Rareté",
+              desc: "Capturer un premier Pokémon Rare.", tiers: [1], compute: () => succesRarityOwnedCount("Rare") },
+            { id: "poke-epique", category: "pokedex", icon: "🟣", name: "Collectionneur Épique",
+              desc: (n) => `Capturer ${n} Pokémon Épiques uniques (sur 176).`, tiers: [10, 50, 100, 176], compute: () => succesRarityOwnedCount("Epique") },
+            { id: "poke-legendaire", category: "pokedex", icon: "🟡", name: "Légende Vivante",
+              desc: "Capturer un premier Pokémon Légendaire.", tiers: [1], compute: () => succesRarityOwnedCount("Legendaire") },
+            // ─ Pokédex : shiny ─
+            { id: "poke-premiershiny", category: "pokedex", icon: "✨", name: "Premier Éclat",
+              desc: "Capturer un premier Pokémon shiny.", tiers: [1], compute: succesUniqueShinyCaughtCount },
+            { id: "poke-shinyhunter", category: "pokedex", icon: "💫", name: "Chasseur de Brillants",
+              desc: (n) => `Capturer ${n} Pokémon shiny uniques.`, tiers: [5, 15, 30, 50], compute: succesUniqueShinyCaughtCount },
+            // ─ GameDex ─
+            { id: "game-ludotheque", category: "gamedex", icon: "🎮", name: "Ludothèque",
+              desc: (n) => `Posséder ${n} jeux uniques (sur 159).`, tiers: [10, 50, 100, 159], compute: succesUniqueGamesOwnedCount },
+            { id: "game-premiergoty", category: "gamedex", icon: "🏆", name: "Jeu de l'Année",
+              desc: "Posséder un premier jeu en édition GOTY.", tiers: [1], compute: succesGotyOwnedCount },
+            { id: "game-palmares", category: "gamedex", icon: "🥇", name: "Palmarès GOTY",
+              desc: (n) => `Posséder ${n} jeux en édition GOTY.`, tiers: [5, 20, 50], compute: succesGotyOwnedCount },
+            { id: "game-epique", category: "gamedex", icon: "🟣", name: "Rareté Épique",
+              desc: "Posséder un jeu de rareté Épique.", tiers: [1], compute: () => succesGameRarityOwnedCount("Epique") },
+            { id: "game-legendaire", category: "gamedex", icon: "🟡", name: "Rareté Légendaire",
+              desc: "Posséder un jeu de rareté Légendaire.", tiers: [1], compute: () => succesGameRarityOwnedCount("Légendaire") },
+            // ─ Transversal ─
+            { id: "global-doublecasquette", category: "global", icon: "🎭", name: "Double Casquette",
+              desc: "Posséder au moins 1 jeu et 1 Pokémon.", tiers: [1],
+              compute: () => (succesUniqueGamesOwnedCount() > 0 && succesUniqueNormalCaughtCount() > 0) ? 1 : 0 }
+        ];
+        function renderAchievements() {
+            const container = document.getElementById("succes-groups");
+            if (!container) return;
+            const categories = [
+                { key: "pokedex", label: "Pokédex" },
+                { key: "gamedex", label: "GameDex" },
+                { key: "global", label: "Transversal" }
+            ];
+            let totalUnlocked = 0;
+            let totalTiers = 0;
+            const html = categories.map(cat => {
+                const items = ACHIEVEMENTS.filter(a => a.category === cat.key);
+                const cardsHtml = items.map(a => {
+                    const value = a.compute();
+                    const unlockedTiers = a.tiers.filter(t => value >= t).length;
+                    totalUnlocked += unlockedTiers;
+                    totalTiers += a.tiers.length;
+                    if (a.tiers.length === 1) {
+                        const unlocked = value >= a.tiers[0];
+                        const descText = typeof a.desc === "function" ? a.desc(a.tiers[0]) : a.desc;
+                        return `<div class="succes-card ${unlocked ? "succes-unlocked" : ""}">`
+                            + `<div class="succes-icon">${a.icon}</div>`
+                            + `<div class="succes-info"><div class="succes-name">${a.name}</div><div class="succes-desc">${descText}</div></div>`
+                            + `<div class="succes-status">${unlocked ? "✓" : "🔒"}</div>`
+                            + `</div>`;
+                    }
+                    const nextIndex = a.tiers.findIndex(t => value < t);
+                    const isComplete = nextIndex === -1;
+                    const nextTarget = isComplete ? a.tiers[a.tiers.length - 1] : a.tiers[nextIndex];
+                    const progressPct = Math.min(100, Math.round((value / nextTarget) * 100));
+                    const descText = isComplete ? "Tous les paliers débloqués !" : (typeof a.desc === "function" ? a.desc(nextTarget) : a.desc);
+                    const pips = a.tiers.map((t, i) => `<span class="succes-pip${value >= t ? " succes-pip-unlocked" : ""}">${SUCCES_ROMAN[i]}</span>`).join("");
+                    const progressHtml = isComplete ? "" : `<div class="succes-progress"><div class="succes-progress-bar" style="width:${progressPct}%;"></div></div><div class="succes-progress-label">${value}/${nextTarget}</div>`;
+                    return `<div class="succes-card ${isComplete ? "succes-unlocked" : ""}">`
+                        + `<div class="succes-icon">${a.icon}</div>`
+                        + `<div class="succes-info"><div class="succes-name">${a.name}</div><div class="succes-pips">${pips}</div><div class="succes-desc">${descText}</div>${progressHtml}</div>`
+                        + `<div class="succes-status">${isComplete ? "✓" : ""}</div>`
+                        + `</div>`;
+                }).join("");
+                return `<div class="succes-group"><h3 class="succes-group-title">${cat.label}</h3><div class="succes-grid">${cardsHtml}</div></div>`;
+            }).join("");
+            container.innerHTML = html;
+            const countEl = document.getElementById("count-succes");
+            const totalEl = document.getElementById("count-succes-total");
+            if (countEl) countEl.textContent = totalUnlocked;
+            if (totalEl) totalEl.textContent = totalTiers;
+        }
         function switchTab(tab) {
             document.getElementById("view-gamedex").style.display = tab === "gamedex" ? "block" : "none";
             document.getElementById("view-pokedex").style.display = tab === "pokedex" ? "block" : "none";
+            document.getElementById("view-succes").style.display = tab === "succes" ? "block" : "none";
             document.getElementById("tab-btn-gamedex").classList.toggle("active", tab === "gamedex");
             document.getElementById("tab-btn-pokedex").classList.toggle("active", tab === "pokedex");
+            document.getElementById("tab-btn-succes").classList.toggle("active", tab === "succes");
+            const titles = { gamedex: "GameDex", pokedex: "Pokédex", succes: "Succès" };
             const username = getUsername();
-            document.title = `${tab === "gamedex" ? "GameDex" : "Pokédex"} - ${username}`;
-            document.getElementById("title").textContent = `${tab === "gamedex" ? "GameDex" : "Pokédex"} - ${username}`;
+            document.title = `${titles[tab]} - ${username}`;
+            document.getElementById("title").textContent = `${titles[tab]} - ${username}`;
         }
         function initPage() {
             const username = getUsername();
