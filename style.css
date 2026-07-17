@@ -1,4 +1,4 @@
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: #111;
             color: #ffffff;
@@ -539,6 +539,39 @@
             margin-bottom: 16px;
             min-height: 40px;
         }
+        .poke-detail-evolution {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+        .poke-evolution-stage {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .poke-evolution-branch {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 4px;
+        }
+        .poke-evolution-sprite {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+        }
+        .poke-evolution-sprite.poke-evolution-uncaught {
+            filter: grayscale(100%) brightness(0.35);
+        }
+        .poke-evolution-arrow {
+            color: #666;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 0 2px;
+        }
         .poke-detail-stats {
             display: flex;
             gap: 20px;
@@ -780,4 +813,3 @@
                 left: 0;
             }
         }
-    
