@@ -105,6 +105,7 @@
             flex-wrap: wrap;
             align-items: center;
             justify-content: center;
+            overflow-x: auto;
         }
         .control-group {
             display: flex;
