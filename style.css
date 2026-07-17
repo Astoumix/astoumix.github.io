@@ -718,6 +718,7 @@
             justify-content: center;
             gap: 10px;
             margin-top: 20px;
+            overflow-x: auto;
         }
         .collection-tabs button {
             padding: 10px 20px;
